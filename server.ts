@@ -274,6 +274,31 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
   }
 });
 
+// Firebase Multi-Provider Social Login Sync Route
+app.post('/api/auth/firebase-sync', async (req: Request, res: Response) => {
+  try {
+    const { uid, email, name, photoURL, provider } = req.body;
+    if (!uid) {
+      res.status(400).json({ error: 'Firebase UID is required' });
+      return;
+    }
+
+    const safeEmail = (typeof email === 'string' && email.trim()) ? email.trim().toLowerCase() : `${uid}@firebase.user`;
+    const user = store.syncFirebaseUser(uid, safeEmail, name, photoURL, provider);
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({ user, token });
+  } catch (err) {
+    console.error('Firebase sync error:', err);
+    res.status(500).json({ error: 'Failed to sync Firebase authenticated user' });
+  }
+});
+
 // Website Owner Admin Access Claim Endpoint
 app.post('/api/admin/claim-ownership', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {

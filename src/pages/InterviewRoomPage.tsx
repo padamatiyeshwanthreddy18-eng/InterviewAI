@@ -34,7 +34,14 @@ import {
   Settings2,
   Play,
   RotateCcw,
+  LogOut,
 } from 'lucide-react';
+import {
+  createFirestoreSession,
+  appendTranscriptTurn,
+  completeFirestoreSession,
+  abandonFirestoreSession,
+} from '../services/dataService';
 
 export const InterviewRoomPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -85,6 +92,9 @@ export const InterviewRoomPage: React.FC = () => {
   // Submission & Loading State
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const sessionStartTimeRef = useRef<number>(Date.now());
+  const hasInitializedFirestoreRef = useRef<boolean>(false);
 
   // Active Question resolution (from state, currentQuestion, or session questions)
   const activeQuestion: InterviewQuestion | null =
@@ -141,6 +151,25 @@ export const InterviewRoomPage: React.FC = () => {
 
     fetchSession();
   }, [id, token, isAuthLoading]);
+
+  // Ensure session document exists in Firestore (users/{userId}/sessions/{sessionId})
+  useEffect(() => {
+    if (!id || !user?.uid || !session || hasInitializedFirestoreRef.current) return;
+    hasInitializedFirestoreRef.current = true;
+
+    createFirestoreSession(user.uid, {
+      sessionId: id,
+      roleTrack: session.track,
+      difficulty: session.difficulty,
+      companyPreset: session.companyPreset,
+      jobDescription: session.jobDescription,
+      totalQuestionsCount: session.totalQuestionsCount || 3,
+      initialQuestionText: activeQuestion?.questionText,
+      initialQuestionType: activeQuestion?.questionType,
+    }).catch((err) => {
+      console.warn('Firestore initial session sync note (offline fallback):', err);
+    });
+  }, [id, user?.uid, session, activeQuestion]);
 
   // Reset timer on question change
   useEffect(() => {
@@ -384,7 +413,49 @@ export const InterviewRoomPage: React.FC = () => {
 
       const data = await res.json();
 
-      if (data.isFinished) {
+      // Real-time Firestore sync of candidate answer and next prompt
+      if (user?.uid && id) {
+        const answeredCount = (data.session?.questions?.filter((q: any) => q.answer).length || 1);
+        const finalAnswer = textAnswer || 'Candidate provided spoken response';
+        appendTranscriptTurn(user.uid, id, {
+          turnId: `turn-${answeredCount * 2}`,
+          speaker: 'user',
+          text: data.answer?.transcriptText || finalAnswer,
+          order: answeredCount * 2,
+          questionId: activeQuestion.id,
+          technicalScore: data.evaluation?.technicalScore,
+          communicationScore: data.evaluation?.communicationScore,
+          aiFeedback: data.evaluation?.aiFeedback,
+        }).catch((e) => console.warn('Transcript turn sync note:', e));
+
+        if (data.nextQuestion) {
+          appendTranscriptTurn(user.uid, id, {
+            turnId: `turn-${answeredCount * 2 + 1}`,
+            speaker: 'ai',
+            text: data.nextQuestion.questionText,
+            order: answeredCount * 2 + 1,
+            questionId: data.nextQuestion.id,
+          }).catch((e) => console.warn('Next question turn sync note:', e));
+        }
+
+        if (data.isFinished || data.isSessionCompleted) {
+          const elapsedSeconds = Math.max(1, Math.round((Date.now() - sessionStartTimeRef.current) / 1000));
+          completeFirestoreSession(user.uid, id, {
+            overallScore: data.session?.overallScore ?? data.evaluation?.technicalScore ?? 80,
+            technicalScore: data.evaluation?.technicalScore,
+            communicationScore: data.evaluation?.communicationScore,
+            sentimentScore: data.evaluation?.sentimentScore,
+            feedbackSummary: data.evaluation?.aiFeedback || '',
+            strengths: data.session?.strengths,
+            weaknesses: data.session?.weaknesses,
+            improvements: data.session?.improvementPlan?.suggestedPractice,
+            durationSeconds: elapsedSeconds,
+            proctoring: latestProctoringReport || undefined,
+          }).catch((e) => console.warn('Complete session sync note:', e));
+        }
+      }
+
+      if (data.isFinished || data.isSessionCompleted) {
         navigate(`/results/${id}`);
       } else {
         setSession(data.session);
@@ -399,6 +470,27 @@ export const InterviewRoomPage: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleAbandonInterview = async () => {
+    const confirmLeave = window.confirm(
+      'Exit interview round early? Your answered questions and transcript will be saved to your dashboard as an unfinished session.'
+    );
+    if (!confirmLeave) return;
+
+    stopRecording();
+    stopTTS();
+
+    if (user?.uid && id) {
+      const elapsedSeconds = Math.max(1, Math.round((Date.now() - sessionStartTimeRef.current) / 1000));
+      try {
+        await abandonFirestoreSession(user.uid, id, elapsedSeconds);
+      } catch (e) {
+        console.warn('Abandon session note:', e);
+      }
+    }
+
+    navigate('/dashboard');
   };
 
   // Global Keyboard Shortcuts
@@ -551,6 +643,14 @@ export const InterviewRoomPage: React.FC = () => {
               <span className="text-[10px] text-[rgba(248,244,233,0.5)] uppercase tracking-wider">Time</span>
               <span className="font-dot text-sm text-[#F6DBC0] tabular-nums font-black">{formattedTime}</span>
             </div>
+
+            <PillButton
+              onClick={handleAbandonInterview}
+              icon={<LogOut className="w-3.5 h-3.5 text-[#E57373]" />}
+              size="sm"
+            >
+              <span className="text-[#E57373] font-bold">Exit Round</span>
+            </PillButton>
           </div>
         </GlassCard>
 

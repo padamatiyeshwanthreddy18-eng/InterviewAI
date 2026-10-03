@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTips, useProfile } from '../hooks/useFirestoreData';
 import { Mail, Sparkles, Send, CheckCircle2, RefreshCw, AlertCircle, Eye, Calendar, Bell } from 'lucide-react';
 
 export const WeeklyTipNotificationCard: React.FC = () => {
   const { token, user } = useAuth();
-  const [enabled, setEnabled] = useState(true);
+  const { tips, latestTip, saveTip } = useTips(user?.uid);
+  const { weeklyTip, toggleWeeklyTip } = useProfile(user?.uid);
+
+  const [enabled, setEnabled] = useState(weeklyTip?.subscribed ?? true);
   const [isLoading, setIsLoading] = useState(true);
-  const [weakCategory, setWeakCategory] = useState<string>('');
+  const [weakCategory, setWeakCategory] = useState<string>('System Architecture & Edge Case Coverage');
   const [tipData, setTipData] = useState<{
     subject: string;
     category: string;
@@ -20,6 +24,28 @@ export const WeeklyTipNotificationCard: React.FC = () => {
   const [dispatchMessage, setDispatchMessage] = useState<string | null>(null);
   const [showEmailPreview, setShowEmailPreview] = useState(false);
 
+  useEffect(() => {
+    if (weeklyTip) {
+      setEnabled(weeklyTip.subscribed);
+    }
+  }, [weeklyTip]);
+
+  // Use real-time persisted tip if available
+  useEffect(() => {
+    if (latestTip) {
+      setTipData({
+        subject: latestTip.subject,
+        category: latestTip.targetCategory,
+        headline: latestTip.headline,
+        coreTip: latestTip.coreTip,
+        actionableExercise: latestTip.actionableExercise,
+        sampleAnswerSnippet: latestTip.sampleAnswerSnippet,
+      });
+      setWeakCategory(latestTip.targetCategory);
+      setIsLoading(false);
+    }
+  }, [latestTip]);
+
   const fetchWeeklyTip = async () => {
     if (!token) return;
     setIsLoading(true);
@@ -32,6 +58,16 @@ export const WeeklyTipNotificationCard: React.FC = () => {
         setEnabled(data.enabled);
         setWeakCategory(data.weakCategory);
         setTipData(data.tip);
+        if (user?.uid && data.tip) {
+          saveTip({
+            targetCategory: data.weakCategory,
+            subject: data.tip.subject,
+            headline: data.tip.headline,
+            coreTip: data.tip.coreTip,
+            actionableExercise: data.tip.actionableExercise,
+            sampleAnswerSnippet: data.tip.sampleAnswerSnippet,
+          }).catch((e) => console.warn('Tip persistence note:', e));
+        }
       }
     } catch (err) {
       console.error('Failed to load weekly tip:', err);
@@ -41,8 +77,22 @@ export const WeeklyTipNotificationCard: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchWeeklyTip();
-  }, [token]);
+    if (!latestTip) {
+      fetchWeeklyTip();
+    } else {
+      setIsLoading(false);
+    }
+  }, [token, latestTip]);
+
+  const handleToggleSubscription = async () => {
+    const nextState = !enabled;
+    setEnabled(nextState);
+    try {
+      await toggleWeeklyTip(nextState);
+    } catch (e) {
+      console.warn('Toggle weekly tip subscription note:', e);
+    }
+  };
 
   const handleSendTestEmail = async () => {
     if (!token) return;
@@ -60,6 +110,16 @@ export const WeeklyTipNotificationCard: React.FC = () => {
       if (res.ok) {
         const data = await res.json();
         setDispatchMessage(data.message);
+        if (data.emailPayload?.tipData && user?.uid) {
+          saveTip({
+            targetCategory: weakCategory,
+            subject: data.emailPayload.tipData.subject,
+            headline: data.emailPayload.tipData.headline,
+            coreTip: data.emailPayload.tipData.coreTip,
+            actionableExercise: data.emailPayload.tipData.actionableExercise,
+            sampleAnswerSnippet: data.emailPayload.tipData.sampleAnswerSnippet,
+          }).catch((e) => console.warn('Persist test email tip note:', e));
+        }
       }
     } catch (err) {
       console.error('Failed to dispatch test email:', err);
@@ -87,7 +147,7 @@ export const WeeklyTipNotificationCard: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setEnabled(!enabled)}
+            onClick={handleToggleSubscription}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-2 border cursor-pointer ${
               enabled
                 ? 'bg-[rgba(127,227,185,0.15)] text-[#7FE3B9] border-[rgba(127,227,185,0.3)]'

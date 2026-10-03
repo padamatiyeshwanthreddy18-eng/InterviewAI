@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { InterviewSession, ImprovementPlan } from '../types';
+import { useSession, useSessions } from '../hooks/useFirestoreData';
 import { generateInterviewPdfReport } from '../utils/pdfGenerator';
 import { ShareSummaryCardModal } from '../components/ShareSummaryCardModal';
 import {
@@ -58,6 +59,38 @@ export const ResultsPage: React.FC = () => {
   const [expandedQuestionId, setExpandedQuestionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+
+  const { session: firestoreSession } = useSession(id, user?.uid);
+  const { sessions: allRealtimeSessions } = useSessions(user?.uid);
+
+  // Sync real-time updates from Firestore
+  useEffect(() => {
+    if (firestoreSession) {
+      setSession((prev) => {
+        if (!prev) return firestoreSession;
+        return {
+          ...prev,
+          overallScore: firestoreSession.overallScore ?? prev.overallScore,
+          status: firestoreSession.status ?? prev.status,
+          strengths: firestoreSession.strengths?.length ? firestoreSession.strengths : prev.strengths,
+          weaknesses: firestoreSession.weaknesses?.length ? firestoreSession.weaknesses : prev.weaknesses,
+          improvementPlan: firestoreSession.improvementPlan || prev.improvementPlan,
+        };
+      });
+      if (firestoreSession.improvementPlan) {
+        setImprovementPlan(firestoreSession.improvementPlan);
+      }
+    }
+  }, [firestoreSession]);
+
+  useEffect(() => {
+    if (allRealtimeSessions && allRealtimeSessions.length > 0) {
+      const prev = allRealtimeSessions.find(
+        (s) => s.id !== id && s.status === 'completed' && s.overallScore !== undefined
+      );
+      if (prev) setPreviousSession(prev);
+    }
+  }, [allRealtimeSessions, id]);
 
   // Ensure any previous speech synthesis from interview room is stopped
   useEffect(() => {

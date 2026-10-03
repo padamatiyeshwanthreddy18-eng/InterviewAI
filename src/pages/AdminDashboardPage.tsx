@@ -46,6 +46,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import { GlassCard, PrimaryButton, PillButton, Badge } from '../components/ui';
+import { useSessions } from '../hooks/useFirestoreData';
 
 interface CandidateDetail {
   user: User;
@@ -67,6 +68,20 @@ export const AdminDashboardPage: React.FC = () => {
   const [usersList, setUsersList] = useState<any[]>([]);
   const [sessionsList, setSessionsList] = useState<any[]>([]);
   const [questionBank, setQuestionBank] = useState<any[]>([]);
+
+  const { sessions: firestoreAdminSessions } = useSessions(undefined, user?.role === 'admin');
+
+  useEffect(() => {
+    if (firestoreAdminSessions && firestoreAdminSessions.length > 0) {
+      setSessionsList((prev) => {
+        if (prev.length === 0) return firestoreAdminSessions;
+        // Merge any new real-time sessions
+        const existingIds = new Set(prev.map((s) => s.id));
+        const newOnes = firestoreAdminSessions.filter((s) => !existingIds.has(s.id));
+        return [...newOnes, ...prev];
+      });
+    }
+  }, [firestoreAdminSessions]);
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');

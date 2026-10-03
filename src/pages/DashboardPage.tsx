@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useSessions, useProfile } from '../hooks/useFirestoreData';
 import { InterviewSession, ROLE_TRACKS, TrackType } from '../types';
 import { PreparationTips } from '../components/PreparationTips';
 import { WeeklyTipNotificationCard } from '../components/WeeklyTipNotificationCard';
@@ -30,53 +31,18 @@ import {
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
-  const { user, token, isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const navigate = useNavigate();
-  const [sessions, setSessions] = useState<InterviewSession[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { sessions, loading: isSessionsLoading, error: sessionsError } = useSessions(user?.uid);
+  const { preferences } = useProfile(user?.uid);
 
-  const fetchSessions = useCallback(async () => {
-    if (!token) return;
-    try {
-      setError(null);
-      const res = await fetch('/api/sessions', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSessions(data.sessions || []);
-      } else {
-        setError('Failed to fetch your interview sessions. Please retry.');
-      }
-    } catch (err) {
-      console.error('Failed to fetch dashboard sessions:', err);
-      setError('Network error connecting to session service.');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (isAuthLoading) return;
-
-    if (!user) {
+  React.useEffect(() => {
+    if (!isAuthLoading && !user) {
       navigate('/auth');
-      return;
     }
+  }, [user, isAuthLoading, navigate]);
 
-    fetchSessions();
-
-    // Real-time synchronization: re-fetch on window focus and every 10s
-    const handleFocus = () => fetchSessions();
-    window.addEventListener('focus', handleFocus);
-    const interval = setInterval(fetchSessions, 10000);
-
-    return () => {
-      window.removeEventListener('focus', handleFocus);
-      clearInterval(interval);
-    };
-  }, [user, isAuthLoading, navigate, fetchSessions]);
+  const isLoading = isAuthLoading || isSessionsLoading;
 
   if (isLoading) {
     return (
@@ -213,19 +179,12 @@ export const DashboardPage: React.FC = () => {
         {/* MAIN DASHBOARD CONTENT AREA */}
         <div className="flex-1 space-y-6">
           {/* ERROR ALERT WITH RETRY */}
-          {error && (
+          {sessionsError && (
             <div className="p-4 bg-[rgba(229,115,115,0.15)] border border-[rgba(229,115,115,0.4)] rounded-2xl text-xs text-[#E57373] flex items-center justify-between gap-3 font-semibold">
               <div className="flex items-center gap-2.5">
                 <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{error}</span>
+                <span>{sessionsError}</span>
               </div>
-              <button
-                onClick={fetchSessions}
-                className="px-3 py-1 bg-[rgba(229,115,115,0.25)] hover:bg-[rgba(229,115,115,0.4)] rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer text-[#F8F4E9]"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Retry</span>
-              </button>
             </div>
           )}
 

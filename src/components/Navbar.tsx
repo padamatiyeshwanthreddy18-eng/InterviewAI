@@ -25,12 +25,17 @@ export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isAudioSettingsOpen, setIsAudioSettingsOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
   const isActive = (path: string) => location.pathname === path;
+
+  const getUserInitials = () => {
+    const raw = user?.name || user?.email || 'Candidate';
+    return raw.substring(0, 2).toUpperCase();
+  };
 
   return (
     <nav className="sticky top-0 z-40 bg-[rgba(26,15,34,0.78)] backdrop-blur-2xl border-b border-[rgba(248,244,233,0.08)] text-[#F8F4E9] transition-all shadow-[0_10px_30px_-10px_rgba(15,7,20,0.5)]">
@@ -153,15 +158,24 @@ export const Navbar: React.FC = () => {
                   to="/profile"
                   className="flex items-center gap-2.5 p-1 rounded-full hover:bg-[rgba(147,80,115,0.2)] transition-all"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#502D55] to-[#935073] border border-[rgba(246,219,192,0.4)] flex items-center justify-center font-bold text-xs text-[#F8F4E9] shadow-sm">
-                    {user.name.substring(0, 2).toUpperCase()}
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#502D55] to-[#935073] border border-[rgba(246,219,192,0.4)] flex items-center justify-center font-bold text-xs text-[#F8F4E9] shadow-sm overflow-hidden shrink-0">
+                    {user.photoURL ? (
+                      <img src={user.photoURL} alt={user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      getUserInitials()
+                    )}
                   </div>
                   <div className="flex flex-col text-left pr-2">
                     <span className="text-xs font-bold text-[#F8F4E9] max-w-[110px] truncate">
                       {user.name}
                     </span>
-                    <span className="text-[9px] font-mono font-semibold text-[#F6DBC0] uppercase tracking-wider">
-                      {user.role}
+                    <span className="text-[9px] font-mono font-semibold text-[#F6DBC0] uppercase tracking-wider flex items-center gap-1">
+                      <span>{user.role}</span>
+                      {user.provider && (
+                        <span className="text-[8px] text-[rgba(248,244,233,0.45)] lowercase">
+                          • {user.provider.replace('.com', '')}
+                        </span>
+                      )}
                     </span>
                   </div>
                 </Link>
@@ -221,12 +235,21 @@ export const Navbar: React.FC = () => {
           {user ? (
             <>
               <div className="pb-3 border-b border-[rgba(248,244,233,0.08)] flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#502D55] to-[#935073] border border-[#F6DBC0] flex items-center justify-center font-bold text-[#F8F4E9] text-xs">
-                  {user.name.substring(0, 2).toUpperCase()}
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#502D55] to-[#935073] border border-[#F6DBC0] flex items-center justify-center font-bold text-[#F8F4E9] text-xs overflow-hidden shrink-0">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt={user.name} className="w-full h-full object-cover" />
+                  ) : (
+                    getUserInitials()
+                  )}
                 </div>
-                <div>
-                  <p className="text-sm font-bold text-[#F8F4E9]">{user.name}</p>
-                  <p className="text-xs text-[rgba(248,244,233,0.5)] font-mono">{user.email}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-[#F8F4E9] truncate">{user.name}</p>
+                  <p className="text-xs text-[rgba(248,244,233,0.5)] font-mono truncate">{user.email}</p>
+                  {user.provider && (
+                    <span className="text-[10px] text-[#F6DBC0] font-mono block">
+                      Signed in via {user.provider.replace('.com', '')}
+                    </span>
+                  )}
                 </div>
               </div>
 

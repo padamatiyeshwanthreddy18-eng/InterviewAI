@@ -1,0 +1,113 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email != null && request.auth.token.email.lower() == 'sachigogulwar525@gmail.com')
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Admins registry collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // User profiles collection
+    match /users/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      
+      // Users can create their own document with role 'user', unless admin
+      allow create: if isSignedIn() &&
+        isValidId(userId) &&
+        request.auth.uid == userId &&
+        incoming().uid == request.auth.uid &&
+        (incoming().role == 'user' || (isAdmin() && incoming().role == 'admin'));
+        
+      // Users can update their own details, but cannot elevate their own role to 'admin'
+      allow update: if isSignedIn() &&
+        isValidId(userId) &&
+        (
+          isAdmin() ||
+          (
+            request.auth.uid == userId &&
+            incoming().uid == existing().uid &&
+            incoming().role == existing().role
+          )
+        );
+        
+      allow delete: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+
+      // Sessions subcollection per candidate
+      match /sessions/{sessionId} {
+        allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+        allow list: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+        
+        allow create: if isSignedIn() &&
+          isValidId(sessionId) &&
+          (request.auth.uid == userId || isAdmin()) &&
+          incoming().userId == userId;
+          
+        allow update: if isSignedIn() &&
+          isValidId(sessionId) &&
+          (request.auth.uid == userId || isAdmin()) &&
+          incoming().userId == existing().userId;
+          
+        allow delete: if isSignedIn() &&
+          isValidId(sessionId) &&
+          (request.auth.uid == userId || isAdmin());
+
+        // Transcript turns subcollection per session
+        match /transcript/{turnId} {
+          allow get, list: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+          allow create, update, delete: if isSignedIn() &&
+            isValidId(turnId) &&
+            (request.auth.uid == userId || isAdmin());
+        }
+      }
+
+      // Weekly Tips subcollection per candidate
+      match /tips/{tipId} {
+        allow get, list: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+        allow create, update, delete: if isSignedIn() &&
+          isValidId(tipId) &&
+          (request.auth.uid == userId || isAdmin());
+      }
+    }
+
+    // Global Role Tracks catalog (accessible by any signed-in candidate, manageable by admin)
+    match /roleTracks/{trackId} {
+      allow get, list: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Collection group query for sessions (allows admins to view all candidate sessions across all users)
+    match /{path=**}/sessions/{sessionId} {
+      allow read: if isAdmin();
+    }
+  }
+}

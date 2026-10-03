@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { TrackType, DifficultyType, Resume } from '../types';
+import { useRoleTracks, useProfile } from '../hooks/useFirestoreData';
+import { createFirestoreSession } from '../services/dataService';
 import { AudioSettingsModal } from '../components/AudioSettingsModal';
 import {
   GlassCard,
@@ -41,6 +43,9 @@ export const TrackSelectionPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { preferences, updatePreferences } = useProfile(user?.uid);
+  const { tracks: roleTracksCatalog } = useRoleTracks();
+
   const [selectedTrack, setSelectedTrack] = useState<TrackType>('SDE');
   const [selectedDifficulty, setSelectedDifficulty] = useState<DifficultyType>('Intermediate');
   const [selectedCompany, setSelectedCompany] = useState<string>('General Tech');
@@ -50,6 +55,24 @@ export const TrackSelectionPage: React.FC = () => {
     return localStorage.getItem('interview_camera_enabled') !== 'false';
   });
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+
+  // Sync saved user preferences if available
+  useEffect(() => {
+    if (preferences) {
+      if (preferences.defaultRoleTrack && !location.search && !(location.state as any)?.selectedTrack) {
+        setSelectedTrack(preferences.defaultRoleTrack as TrackType);
+      }
+      if (preferences.defaultDifficulty) {
+        setSelectedDifficulty(preferences.defaultDifficulty as DifficultyType);
+      }
+      if (preferences.defaultCompanyPreset) {
+        setSelectedCompany(preferences.defaultCompanyPreset);
+      }
+      if (preferences.cameraEnabled !== undefined) {
+        setIsCameraEnabled(preferences.cameraEnabled);
+      }
+    }
+  }, [preferences, location]);
 
   // Parse track from query string or navigation state
   useEffect(() => {
@@ -219,6 +242,26 @@ export const TrackSelectionPage: React.FC = () => {
         setError(data?.error || 'Failed to start interview session. Please try again.');
         setIsStarting(false);
         return;
+      }
+
+      if (user?.uid) {
+        updatePreferences({
+          defaultRoleTrack: selectedTrack,
+          defaultDifficulty: selectedDifficulty,
+          defaultCompanyPreset: selectedCompany,
+          cameraEnabled: isCameraEnabled,
+        }).catch((e) => console.warn('Preferences update note:', e));
+
+        createFirestoreSession(user.uid, {
+          sessionId: data.session.id,
+          roleTrack: selectedTrack,
+          difficulty: selectedDifficulty,
+          companyPreset: selectedCompany,
+          jobDescription: jobDescription.trim() || undefined,
+          totalQuestionsCount: safeQuestionCount,
+          initialQuestionText: data.currentQuestion?.questionText,
+          initialQuestionType: data.currentQuestion?.questionType,
+        }).catch((e) => console.warn('Firestore initial session creation note:', e));
       }
 
       navigate(`/interview/${data.session.id}`, {

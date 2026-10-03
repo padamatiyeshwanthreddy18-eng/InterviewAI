@@ -55,6 +55,24 @@
       "role": "user",
       "passwordHash": "$2b$10$xPpFWD9x8tgdNdgrCWguJ.K/xwBSnEa4WSbyr9uGoy5OeeOY9Yh9O",
       "createdAt": "2026-10-03T14:27:36.837Z"
+    },
+    {
+      "id": "user-1791042078284-4e0v",
+      "email": "25r21a0575@mlrit.ac.in",
+      "name": "hindujs",
+      "role": "user",
+      "passwordHash": "$2b$10$UYxB39K40HmV73SdBDauyOddIGRRoT0P1T9LYZXm6FVp1sfZeT.s6",
+      "createdAt": "2026-10-03T15:41:18.284Z"
+    },
+    {
+      "id": "test-fb-123",
+      "email": "test@example.com",
+      "name": "Test User",
+      "role": "user",
+      "passwordHash": "$2b$10$xPQOK45yZmARwrBp9FF8uOm5f/qfHL6V45yOcnxGSFlxozuZhgVzO",
+      "createdAt": "2026-10-03T15:56:42.850Z",
+      "lastLoginAt": "2026-10-03T15:56:42.850Z",
+      "provider": "google.com"
     }
   ],
   "resumes": [

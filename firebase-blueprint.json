@@ -1,0 +1,135 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile with role-based access control, preferences, and weekly tip settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Authentication User UID" },
+        "displayName": { "type": "string", "description": "User full name or display handle" },
+        "email": { "type": "string", "description": "User email address" },
+        "photoURL": { "type": "string", "description": "Avatar photo URL" },
+        "provider": { "type": "string", "description": "Primary authentication provider ID" },
+        "role": { "type": "string", "enum": ["user", "admin"], "description": "User role: user or admin" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "lastLoginAt": { "type": "string", "format": "date-time", "description": "Last sign in timestamp" },
+        "preferences": {
+          "type": "object",
+          "description": "Candidate interview preferences"
+        },
+        "weeklyTip": {
+          "type": "object",
+          "description": "Weekly practice tip subscription settings"
+        }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Session": {
+      "title": "Interview Session",
+      "description": "Full mock interview session doc with scores, status, feedback, and telemetry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique session ID" },
+        "userId": { "type": "string", "description": "Candidate User UID" },
+        "roleTrack": { "type": "string", "description": "Role track name e.g. SDE" },
+        "track": { "type": "string", "description": "Track alias matching roleTrack" },
+        "difficulty": { "type": "string", "enum": ["Beginner", "Intermediate", "Advanced"], "description": "Interview difficulty" },
+        "companyPreset": { "type": "string", "description": "Selected company rubric e.g. Google, Amazon" },
+        "jobDescription": { "type": "string", "description": "Job description or customized interview context" },
+        "status": { "type": "string", "enum": ["in_progress", "completed", "abandoned"], "description": "Interview state" },
+        "startedAt": { "type": "string", "format": "date-time", "description": "Start timestamp" },
+        "endedAt": { "type": "string", "format": "date-time", "description": "Completion or abandonment timestamp" },
+        "durationSeconds": { "type": "number", "description": "Total duration in seconds" },
+        "overallScore": { "type": "number", "description": "Overall composite score 0-100" },
+        "technicalScore": { "type": "number", "description": "Average technical score 0-100" },
+        "communicationScore": { "type": "number", "description": "Average communication score 0-100" },
+        "sentimentScore": { "type": "number", "description": "Average sentiment / confidence score 0-100" },
+        "feedbackSummary": { "type": "string", "description": "AI feedback summary" },
+        "strengths": { "type": "array", "description": "Key strengths identified by AI" },
+        "weaknesses": { "type": "array", "description": "Key improvement areas identified by AI" },
+        "improvements": { "type": "array", "description": "Improvement roadmap items" },
+        "totalQuestionsCount": { "type": "number", "description": "Target number of questions" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "completedAt": { "type": "string", "format": "date-time", "description": "Completion timestamp" }
+      },
+      "required": ["userId", "roleTrack", "difficulty", "status"]
+    },
+    "TranscriptTurn": {
+      "title": "Transcript Turn",
+      "description": "A single spoken turn in an interview (either candidate answer or AI coach question)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique turn ID" },
+        "sessionId": { "type": "string", "description": "Parent session ID" },
+        "speaker": { "type": "string", "enum": ["ai", "user"], "description": "Speaker identity" },
+        "text": { "type": "string", "description": "Question text or candidate transcript" },
+        "timestamp": { "type": "string", "format": "date-time", "description": "Turn timestamp" },
+        "order": { "type": "number", "description": "Chronological order index" },
+        "questionId": { "type": "string", "description": "Associated question ID" },
+        "technicalScore": { "type": "number", "description": "Turn technical score if evaluated" },
+        "communicationScore": { "type": "number", "description": "Turn communication score if evaluated" },
+        "aiFeedback": { "type": "string", "description": "Turn AI critique if evaluated" }
+      },
+      "required": ["speaker", "text", "order"]
+    },
+    "RoleTrack": {
+      "title": "Role Track Catalog",
+      "description": "Role track definitions, strategies, frameworks, and preparation guides",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Track ID e.g. SDE" },
+        "name": { "type": "string", "description": "Full track title" },
+        "shortCode": { "type": "string", "description": "Short code e.g. SDE, FE, FS" },
+        "description": { "type": "string", "description": "Overview of track" },
+        "framework": { "type": "string", "description": "Recommended answering framework" },
+        "idealPacing": { "type": "string", "description": "Suggested time pacing" },
+        "mindset": { "type": "string", "description": "Recommended candidate mindset" },
+        "checklist": { "type": "array", "description": "Preparation checklist items" },
+        "focusAreas": { "type": "array", "description": "Key focus areas" },
+        "tips": { "type": "object", "description": "Category tips" },
+        "icon": { "type": "string", "description": "Icon identifier" }
+      },
+      "required": ["name", "shortCode", "description"]
+    },
+    "Tip": {
+      "title": "Weekly Practice Tip",
+      "description": "Personalized coaching tips and exercises tailored to candidate weak areas",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Tip ID" },
+        "userId": { "type": "string", "description": "Candidate User UID" },
+        "targetCategory": { "type": "string", "description": "Weak skill category target" },
+        "subject": { "type": "string", "description": "Tip headline subject line" },
+        "headline": { "type": "string", "description": "Brief headline" },
+        "coreTip": { "type": "string", "description": "Coaching tip body" },
+        "actionableExercise": { "type": "string", "description": "Practice exercise to perform" },
+        "sampleAnswerSnippet": { "type": "string", "description": "Model answer demonstration" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" },
+        "sentAt": { "type": "string", "format": "date-time", "description": "Dispatch timestamp" }
+      },
+      "required": ["userId", "targetCategory", "subject", "coreTip"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user account profiles"
+    },
+    "/users/{userId}/sessions/{sessionId}": {
+      "schema": "Session",
+      "description": "Mock interview sessions belonging to a specific candidate"
+    },
+    "/users/{userId}/sessions/{sessionId}/transcript/{turnId}": {
+      "schema": "TranscriptTurn",
+      "description": "Real-time transcript turns for an interview session"
+    },
+    "/users/{userId}/tips/{tipId}": {
+      "schema": "Tip",
+      "description": "Weekly tips generated for candidate skill growth"
+    },
+    "/roleTracks/{trackId}": {
+      "schema": "RoleTrack",
+      "description": "Global catalog of role tracks with prep guidelines, read-only for candidates"
+    }
+  }
+}

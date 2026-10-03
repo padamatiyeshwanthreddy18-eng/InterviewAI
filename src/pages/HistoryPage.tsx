@@ -31,38 +31,16 @@ import {
   AlertCircle,
 } from 'lucide-react';
 
+import { useSessions } from '../hooks/useFirestoreData';
+
 export const HistoryPage: React.FC = () => {
-  const { token, user, isLoading: isAuthLoading } = useAuth();
+  const { user, isLoading: isAuthLoading } = useAuth();
   const navigate = useNavigate();
 
-  const [sessions, setSessions] = useState<InterviewSession[]>([]);
+  const { sessions, loading: isLoading, error, deleteSession } = useSessions(user?.uid);
   const [filteredSessions, setFilteredSessions] = useState<InterviewSession[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTrack, setSelectedTrack] = useState<string>('ALL');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchSessions = async () => {
-    if (!token) return;
-    try {
-      setError(null);
-      const res = await fetch('/api/sessions', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSessions(data.sessions || []);
-        setFilteredSessions(data.sessions || []);
-      } else {
-        setError('Failed to load session history. Please try again.');
-      }
-    } catch (err) {
-      console.error('Failed to load history sessions:', err);
-      setError('Network error connecting to session history service.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
     if (isAuthLoading) return;
@@ -71,13 +49,7 @@ export const HistoryPage: React.FC = () => {
       navigate('/auth');
       return;
     }
-
-    fetchSessions();
-
-    const handleFocus = () => fetchSessions();
-    window.addEventListener('focus', handleFocus);
-    return () => window.removeEventListener('focus', handleFocus);
-  }, [user, token, navigate, isAuthLoading]);
+  }, [user, navigate, isAuthLoading]);
 
   // Filter effect
   useEffect(() => {
@@ -244,12 +216,6 @@ export const HistoryPage: React.FC = () => {
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
-            <button
-              onClick={fetchSessions}
-              className="px-3 py-1 bg-[rgba(229,115,115,0.25)] hover:bg-[rgba(229,115,115,0.4)] rounded-xl text-xs font-bold transition cursor-pointer text-[#F8F4E9]"
-            >
-              Retry
-            </button>
           </div>
         )}
 

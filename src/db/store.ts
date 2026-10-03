@@ -129,16 +129,54 @@ class Store {
     return u;
   }
 
-  updateUser(id: string, updates: { name?: string; email?: string; passwordHash?: string; role?: 'user' | 'admin' }): User | null {
+  updateUser(id: string, updates: Partial<User & { passwordHash?: string }>): User | null {
     const index = this.data.users.findIndex((u) => u.id === id);
     if (index === -1) return null;
     const current = this.data.users[index];
-    if (updates.name) current.name = updates.name;
-    if (updates.email) current.email = updates.email;
-    if (updates.passwordHash) current.passwordHash = updates.passwordHash;
-    if (updates.role) current.role = updates.role;
+    if (updates.name !== undefined) current.name = updates.name;
+    if (updates.email !== undefined) current.email = updates.email;
+    if (updates.passwordHash !== undefined) current.passwordHash = updates.passwordHash;
+    if (updates.role !== undefined) current.role = updates.role;
+    if (updates.photoURL !== undefined) current.photoURL = updates.photoURL;
+    if (updates.provider !== undefined) current.provider = updates.provider;
+    if (updates.lastLoginAt !== undefined) current.lastLoginAt = updates.lastLoginAt;
     this.save();
     const { passwordHash: _, ...u } = current;
+    return u;
+  }
+
+  syncFirebaseUser(uid: string, email: string, name?: string, photoURL?: string, provider?: string): User {
+    let existing = this.getUserById(uid) || this.getUserByEmail(email);
+    if (existing) {
+      const updates: Partial<User> = {
+        lastLoginAt: new Date().toISOString(),
+      };
+      if (name && (!existing.name || existing.name === 'Candidate')) updates.name = name;
+      if (photoURL) updates.photoURL = photoURL;
+      if (provider) updates.provider = provider;
+      const updated = this.updateUser(existing.id, updates);
+      return updated || existing;
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    const passwordHash = bcrypt.hashSync(`firebase-${uid}-${Date.now()}`, salt);
+    const isOwner = email.toLowerCase() === 'sachigogulwar525@gmail.com';
+    const role: 'user' | 'admin' = isOwner ? 'admin' : 'user';
+
+    const newUser: User & { passwordHash: string } = {
+      id: uid,
+      email,
+      name: name || email.split('@')[0] || 'Candidate',
+      role,
+      passwordHash,
+      createdAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString(),
+      photoURL,
+      provider: provider || 'google.com',
+    };
+    this.data.users.push(newUser);
+    this.save();
+    const { passwordHash: _, ...u } = newUser;
     return u;
   }
 

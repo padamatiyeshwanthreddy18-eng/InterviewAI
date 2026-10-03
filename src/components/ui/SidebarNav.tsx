@@ -35,13 +35,22 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
         {/* User Mini Profile Badge (Reference B) */}
         {user ? (
           <div className="p-3.5 rounded-2xl bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.06)] flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#502D55] to-[#935073] border-2 border-[#F6DBC0] flex items-center justify-center font-bold text-xs text-[#F8F4E9] shadow-[0_0_12px_rgba(147,80,115,0.4)]">
-              {user.name.substring(0, 2).toUpperCase()}
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#502D55] to-[#935073] border-2 border-[#F6DBC0] flex items-center justify-center font-bold text-xs text-[#F8F4E9] shadow-[0_0_12px_rgba(147,80,115,0.4)] overflow-hidden shrink-0">
+              {user.photoURL ? (
+                <img src={user.photoURL} alt={user.name} className="w-full h-full object-cover" />
+              ) : (
+                (user.name || user.email || 'Candidate').substring(0, 2).toUpperCase()
+              )}
             </div>
             <div className="flex flex-col min-w-0">
               <span className="text-xs font-bold text-[#F8F4E9] truncate">{user.name}</span>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#F6DBC0]">
-                {user.role === 'admin' ? 'Admin' : 'Candidate'}
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#F6DBC0] flex items-center gap-1">
+                <span>{user.role === 'admin' ? 'Admin' : 'Candidate'}</span>
+                {user.provider && (
+                  <span className="text-[8px] text-[rgba(248,244,233,0.45)] lowercase">
+                    • {user.provider.replace('.com', '')}
+                  </span>
+                )}
               </span>
             </div>
           </div>

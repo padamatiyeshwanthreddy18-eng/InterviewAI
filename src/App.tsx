@@ -14,6 +14,7 @@ import { HistoryPage } from './pages/HistoryPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { CursorGridBackground } from './components/ui/CursorGridBackground';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 export default function App() {
   return (
@@ -32,13 +33,62 @@ export default function App() {
                 <Route path="/login" element={<AuthPage defaultMode="login" />} />
                 <Route path="/register" element={<AuthPage defaultMode="signup" />} />
                 <Route path="/signup" element={<AuthPage defaultMode="signup" />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/track-selection" element={<TrackSelectionPage />} />
-                <Route path="/interview/:id" element={<InterviewRoomPage />} />
-                <Route path="/results/:id" element={<ResultsPage />} />
-                <Route path="/history" element={<HistoryPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/admin" element={<AdminDashboardPage />} />
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <DashboardPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/track-selection"
+                  element={
+                    <ProtectedRoute>
+                      <TrackSelectionPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/interview/:id"
+                  element={
+                    <ProtectedRoute>
+                      <InterviewRoomPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/results/:id"
+                  element={
+                    <ProtectedRoute>
+                      <ResultsPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/history"
+                  element={
+                    <ProtectedRoute>
+                      <HistoryPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <AdminDashboardPage />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>

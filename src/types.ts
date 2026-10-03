@@ -34,6 +34,10 @@ export interface User {
   role: RoleType;
   createdAt: string;
   emailTipEnabled?: boolean;
+  photoURL?: string;
+  provider?: string;
+  lastLoginAt?: string;
+  uid?: string;
 }
 
 export interface Resume {
