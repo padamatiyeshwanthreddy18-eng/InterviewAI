@@ -56,6 +56,7 @@ app.use(
   helmet({
     contentSecurityPolicy: false, // Maintain compatibility with Vite inline dev/SPA scripts
     crossOriginEmbedderPolicy: false,
+    frameguard: false, // Allow embedding inside AI Studio preview iframe
   })
 );
 

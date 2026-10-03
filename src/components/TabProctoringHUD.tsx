@@ -137,35 +137,35 @@ export const TabProctoringHUD: React.FC<TabProctoringHUDProps> = ({
   return (
     <>
       {/* Proctoring HUD Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs space-y-3 transition-all">
+      <div className="bg-[rgba(42,27,51,0.72)] backdrop-blur-xl border border-[rgba(248,244,233,0.08)] rounded-3xl p-4 shadow-[0_10px_30px_-10px_rgba(15,7,20,0.5)] space-y-3 transition-all text-[#F8F4E9]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div
               className={`w-9 h-9 rounded-2xl flex items-center justify-center ${
                 tabSwitches === 0
-                  ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800'
+                  ? 'bg-[rgba(127,227,185,0.15)] text-[#7FE3B9] border border-[rgba(127,227,185,0.3)]'
                   : tabSwitches < 3
-                  ? 'bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800 animate-pulse'
-                  : 'bg-rose-50 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 animate-bounce'
+                  ? 'bg-[rgba(246,219,192,0.15)] text-[#F6DBC0] border border-[rgba(246,219,192,0.3)] animate-pulse'
+                  : 'bg-[rgba(229,115,115,0.15)] text-[#E57373] border border-[rgba(229,115,115,0.3)] animate-bounce'
               }`}
             >
-              {tabSwitches === 0 ? <ShieldCheck className="w-5 h-5" /> : <ShieldAlert className="w-5 h-5" />}
+              {tabSwitches === 0 ? <ShieldCheck className="w-5 h-5 text-[#7FE3B9]" /> : <ShieldAlert className="w-5 h-5" />}
             </div>
 
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1.5">
-                  <Monitor className="w-3.5 h-3.5 text-indigo-500" />
+                <span className="text-xs font-black text-[#F8F4E9] flex items-center gap-1.5">
+                  <Monitor className="w-3.5 h-3.5 text-[#F6DBC0]" />
                   Exam Tab & Focus Proctor
                 </span>
 
                 <span
                   className={`text-[10px] px-2 py-0.5 rounded-full font-bold border flex items-center gap-1 ${
                     tabSwitches === 0
-                      ? 'bg-emerald-50 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
+                      ? 'bg-[rgba(127,227,185,0.15)] text-[#7FE3B9] border-[rgba(127,227,185,0.3)]'
                       : tabSwitches < 3
-                      ? 'bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800'
-                      : 'bg-rose-50 dark:bg-rose-950 text-rose-700 dark:text-rose-300 border-rose-200 dark:border-rose-800'
+                      ? 'bg-[rgba(246,219,192,0.15)] text-[#F6DBC0] border-[rgba(246,219,192,0.3)]'
+                      : 'bg-[rgba(229,115,115,0.15)] text-[#E57373] border-[rgba(229,115,115,0.3)]'
                   }`}
                 >
                   <Radio className="w-2.5 h-2.5 animate-pulse" />
@@ -173,8 +173,8 @@ export const TabProctoringHUD: React.FC<TabProctoringHUDProps> = ({
                 </span>
               </div>
 
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                Active Screen: <span className="font-bold text-slate-700 dark:text-slate-300">Interview Room</span> • Integrity Score: <span className="font-bold text-indigo-600 dark:text-indigo-400">{integrityScore}%</span>
+              <p className="text-[11px] text-[rgba(248,244,233,0.6)] font-medium">
+                Active Screen: <span className="font-bold text-[#F8F4E9]">Interview Room</span> • Integrity Score: <span className="font-bold text-[#F6DBC0]">{integrityScore}%</span>
               </p>
             </div>
           </div>
@@ -183,7 +183,7 @@ export const TabProctoringHUD: React.FC<TabProctoringHUDProps> = ({
             <button
               type="button"
               onClick={toggleFullscreen}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 text-xs font-bold transition flex items-center gap-1"
+              className="p-2 rounded-xl bg-[rgba(80,45,85,0.4)] border border-[rgba(246,219,192,0.2)] text-[#F6DBC0] hover:text-[#F8F4E9] text-xs font-bold transition flex items-center gap-1 cursor-pointer"
               title="Toggle Fullscreen Exam Mode"
             >
               {isExamFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
@@ -193,7 +193,7 @@ export const TabProctoringHUD: React.FC<TabProctoringHUDProps> = ({
             <button
               type="button"
               onClick={() => setIsExpanded((prev) => !prev)}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white text-xs font-bold transition flex items-center gap-1"
+              className="p-2 rounded-xl bg-[rgba(80,45,85,0.4)] border border-[rgba(246,219,192,0.2)] text-[#F6DBC0] hover:text-[#F8F4E9] text-xs font-bold transition flex items-center gap-1 cursor-pointer"
             >
               <span>{events.length} Events</span>
               {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -203,14 +203,14 @@ export const TabProctoringHUD: React.FC<TabProctoringHUDProps> = ({
 
         {/* Expandable Audit Log */}
         {isExpanded && (
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
-            <h5 className="text-[11px] font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+          <div className="pt-3 border-t border-[rgba(248,244,233,0.08)] space-y-2">
+            <h5 className="text-[11px] font-extrabold text-[rgba(248,244,233,0.7)] uppercase tracking-wider">
               Live Proctoring Event Log (Monitored in Real Time)
             </h5>
 
             {events.length === 0 ? (
-              <div className="p-3 bg-slate-50 dark:bg-slate-950 rounded-xl text-xs text-slate-500 font-medium flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <div className="p-3 bg-[rgba(26,15,34,0.6)] rounded-xl text-xs text-[rgba(248,244,233,0.6)] font-medium flex items-center gap-2 border border-[rgba(248,244,233,0.06)]">
+                <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
                 <span>No tab switches or outside window navigation detected. Perfect exam focus!</span>
               </div>
             ) : (
@@ -218,13 +218,13 @@ export const TabProctoringHUD: React.FC<TabProctoringHUDProps> = ({
                 {events.map((evt) => (
                   <div
                     key={evt.id}
-                    className="p-2.5 bg-rose-50/60 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 rounded-xl text-xs text-rose-800 dark:text-rose-200 flex items-center justify-between gap-2"
+                    className="p-2.5 bg-[rgba(229,115,115,0.12)] border border-[rgba(229,115,115,0.3)] rounded-xl text-xs text-[#E57373] flex items-center justify-between gap-2"
                   >
                     <div className="flex items-center gap-2">
-                      <AlertTriangle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                      <AlertTriangle className="w-3.5 h-3.5 text-[#E57373] shrink-0" />
                       <span className="font-semibold">{evt.details}</span>
                     </div>
-                    <span className="text-[10px] font-mono text-slate-400 font-bold shrink-0">{evt.timestamp}</span>
+                    <span className="text-[10px] font-mono text-[rgba(248,244,233,0.5)] font-bold shrink-0">{evt.timestamp}</span>
                   </div>
                 ))}
               </div>
@@ -235,29 +235,29 @@ export const TabProctoringHUD: React.FC<TabProctoringHUDProps> = ({
 
       {/* Immediate Tab Switch Warning Modal */}
       {showWarningModal && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-150">
-          <div className="bg-white dark:bg-slate-900 border-2 border-rose-500 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 text-center shadow-2xl relative text-slate-900 dark:text-white">
-            <div className="w-16 h-16 rounded-2xl bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-400 border border-rose-300 dark:border-rose-800 mx-auto flex items-center justify-center shadow-lg">
+        <div className="fixed inset-0 z-50 bg-[#1A0F22]/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-150">
+          <div className="bg-[rgba(42,27,51,0.95)] border-2 border-[#E57373] rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 text-center shadow-2xl relative text-[#F8F4E9]">
+            <div className="w-16 h-16 rounded-2xl bg-[rgba(229,115,115,0.15)] text-[#E57373] border border-[rgba(229,115,115,0.4)] mx-auto flex items-center justify-center shadow-lg">
               <ShieldAlert className="w-8 h-8 animate-bounce" />
             </div>
 
             <div className="space-y-2">
-              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-rose-100 dark:bg-rose-950 text-rose-700 dark:text-rose-300 text-xs font-black uppercase tracking-wider border border-rose-300 dark:border-rose-800">
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[rgba(229,115,115,0.15)] text-[#E57373] text-xs font-black uppercase tracking-wider border border-[rgba(229,115,115,0.3)]">
                 ⚠️ Tab Switch Detected
               </span>
-              <h3 className="text-xl font-black">Exam Tab Switch Warning</h3>
-              <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+              <h3 className="text-xl font-black text-[#F8F4E9]">Exam Tab Switch Warning</h3>
+              <p className="text-xs text-[rgba(248,244,233,0.7)] font-medium leading-relaxed">
                 You navigated away from this interview session for{' '}
-                <span className="font-extrabold text-rose-600 dark:text-rose-400 font-mono">
+                <span className="font-extrabold text-[#E57373] font-mono">
                   {lastWarningDuration} second{lastWarningDuration > 1 ? 's' : ''}
                 </span>
                 .
               </p>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-3.5 rounded-2xl text-left text-xs space-y-1.5 font-medium">
-              <span className="font-bold text-slate-900 dark:text-white block">Anti-Cheating Policy:</span>
-              <ul className="list-disc pl-4 space-y-1 text-slate-500 dark:text-slate-400 text-[11px]">
+            <div className="bg-[rgba(26,15,34,0.7)] border border-[rgba(248,244,233,0.08)] p-3.5 rounded-2xl text-left text-xs space-y-1.5 font-medium">
+              <span className="font-bold text-[#F8F4E9] block">Anti-Cheating Policy:</span>
+              <ul className="list-disc pl-4 space-y-1 text-[rgba(248,244,233,0.6)] text-[11px]">
                 <li>All tab changes, browser minimizing, and outside window focuses are recorded in your final candidate report.</li>
                 <li>Multiple tab switches may decrease your candidate integrity score.</li>
               </ul>
@@ -266,7 +266,7 @@ export const TabProctoringHUD: React.FC<TabProctoringHUDProps> = ({
             <button
               type="button"
               onClick={() => setShowWarningModal(false)}
-              className="w-full py-3.5 bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white rounded-xl text-xs font-extrabold shadow-md transition cursor-pointer"
+              className="w-full py-3.5 bg-gradient-to-r from-[#502D55] via-[#935073] to-[#a65d83] hover:from-[#603766] hover:to-[#ba6d95] border border-[rgba(246,219,192,0.3)] text-[#F8F4E9] rounded-xl text-xs font-extrabold shadow-[0_0_20px_rgba(147,80,115,0.4)] transition cursor-pointer"
             >
               I Understand — Return to Interview
             </button>

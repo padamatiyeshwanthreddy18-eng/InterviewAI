@@ -97,20 +97,20 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode }) => {
   };
 
   return (
-    <div className="w-full min-h-[calc(100vh-4rem)] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex items-center justify-center px-4 py-12 relative overflow-hidden transition-colors">
+    <div className="w-full min-h-[calc(100vh-4rem)] text-[#F8F4E9] flex items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Background radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-indigo-500/10 dark:bg-indigo-600/15 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[#935073]/20 blur-[100px] rounded-full pointer-events-none" />
 
-      <div className="max-w-md w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-xl p-6 sm:p-8 relative z-10">
+      <div className="max-w-md w-full bg-[rgba(42,27,51,0.72)] backdrop-blur-xl border border-[rgba(248,244,233,0.08)] rounded-3xl shadow-[0_20px_45px_rgba(15,7,20,0.8),0_0_30px_rgba(147,80,115,0.2)] p-6 sm:p-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-slate-900 dark:bg-indigo-600/20 text-white dark:text-indigo-400 mb-3 shadow-xs">
-            <Bot className="w-6 h-6" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#502D55] to-[#935073] border border-[rgba(246,219,192,0.3)] text-[#F8F4E9] mb-3 shadow-[0_0_18px_rgba(147,80,115,0.4)]">
+            <Bot className="w-6 h-6 text-[#F8F4E9]" />
           </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+          <h2 className="text-2xl font-black text-[#F8F4E9]">
             {isSignUp ? 'Create your InterviewAI account' : 'Welcome back to InterviewAI'}
           </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1.5 font-medium">
+          <p className="text-xs text-[rgba(248,244,233,0.65)] mt-1.5 font-medium">
             {isSignUp
               ? 'Join thousands of candidates mastering technical and behavioral mock interviews.'
               : 'Sign in to access your interview dashboard and session analytics.'}
@@ -119,9 +119,9 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode }) => {
 
         {/* Error Alert Banner */}
         {error && (
-          <div className="mb-6 p-3.5 bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-500/50 rounded-xl text-xs text-rose-800 dark:text-rose-200 flex items-center gap-2.5 animate-fadeIn">
-            <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
-            <span className="font-medium">{error}</span>
+          <div className="mb-6 p-3.5 bg-[rgba(229,115,115,0.12)] border border-[rgba(229,115,115,0.4)] rounded-xl text-xs text-[#E57373] flex items-center gap-2.5">
+            <AlertCircle className="w-4 h-4 text-[#E57373] shrink-0" />
+            <span className="font-semibold">{error}</span>
           </div>
         )}
 
@@ -129,29 +129,29 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {isSignUp && (
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-[#F8F4E9] mb-1.5 uppercase tracking-wider">
                 Full Name
               </label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-[rgba(248,244,233,0.4)] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   required={isSignUp}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Alex Rivera"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none transition font-medium"
+                  className="w-full bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.1)] focus:border-[#935073] focus:ring-2 focus:ring-[#935073]/30 rounded-xl py-2.5 pl-10 pr-4 text-sm text-[#F8F4E9] placeholder-[rgba(248,244,233,0.3)] outline-none transition font-medium"
                 />
               </div>
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-[#F8F4E9] mb-1.5 uppercase tracking-wider">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-[rgba(248,244,233,0.4)] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
@@ -159,17 +159,17 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode }) => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@company.com"
                 autoComplete="email"
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none transition font-medium"
+                className="w-full bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.1)] focus:border-[#935073] focus:ring-2 focus:ring-[#935073]/30 rounded-xl py-2.5 pl-10 pr-4 text-sm text-[#F8F4E9] placeholder-[rgba(248,244,233,0.3)] outline-none transition font-medium"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-[#F8F4E9] mb-1.5 uppercase tracking-wider">
               Password
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-[rgba(248,244,233,0.4)] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="password"
                 required
@@ -178,11 +178,11 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 autoComplete={isSignUp ? 'new-password' : 'current-password'}
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-xl py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 outline-none transition font-medium"
+                className="w-full bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.1)] focus:border-[#935073] focus:ring-2 focus:ring-[#935073]/30 rounded-xl py-2.5 pl-10 pr-4 text-sm text-[#F8F4E9] placeholder-[rgba(248,244,233,0.3)] outline-none transition font-medium"
               />
             </div>
             {isSignUp && (
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 font-medium">
+              <p className="text-[11px] text-[rgba(248,244,233,0.5)] mt-1.5 font-medium">
                 At least 8 characters, with a letter and a number.
               </p>
             )}
@@ -191,21 +191,21 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode }) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full mt-2 py-3 bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 disabled:opacity-50 text-white font-bold rounded-xl text-sm shadow-sm transition flex items-center justify-center gap-2"
+            className="w-full mt-2 py-3 bg-gradient-to-r from-[#502D55] via-[#935073] to-[#a65d83] hover:from-[#603766] hover:to-[#ba6d95] border border-[rgba(246,219,192,0.3)] disabled:opacity-50 text-[#F8F4E9] font-bold rounded-xl text-sm shadow-[0_0_20px_rgba(147,80,115,0.4)] transition flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01]"
           >
             {isSubmitting ? (
               <span>Authenticating...</span>
             ) : (
               <>
                 <span>{isSignUp ? 'Create Account' : 'Sign In'}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-[#F6DBC0]" />
               </>
             )}
           </button>
         </form>
 
         {/* Footer Toggle */}
-        <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 text-center text-xs text-slate-600 dark:text-slate-400 font-medium">
+        <div className="mt-6 pt-4 border-t border-[rgba(248,244,233,0.08)] text-center text-xs text-[rgba(248,244,233,0.6)] font-medium">
           {isSignUp ? (
             <p>
               Already have an account?{' '}
@@ -215,7 +215,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode }) => {
                   setIsSignUp(false);
                   setError(null);
                 }}
-                className="text-indigo-600 dark:text-indigo-400 hover:underline font-bold"
+                className="text-[#F6DBC0] hover:underline font-bold cursor-pointer"
               >
                 Sign in here
               </button>
@@ -229,7 +229,7 @@ export const AuthPage: React.FC<AuthPageProps> = ({ defaultMode }) => {
                   setIsSignUp(true);
                   setError(null);
                 }}
-                className="text-indigo-600 dark:text-indigo-400 hover:underline font-bold"
+                className="text-[#F6DBC0] hover:underline font-bold cursor-pointer"
               >
                 Sign up free
               </button>

@@ -12,6 +12,19 @@ export type TrackType =
   | 'QA & Automation'
   | 'HR/Behavioral';
 
+export const ROLE_TRACKS: TrackType[] = [
+  'SDE',
+  'Frontend Engineer',
+  'Full Stack Engineer',
+  'Data Scientist',
+  'Data Engineer',
+  'DevOps & Cloud',
+  'Cybersecurity',
+  'Product Manager',
+  'QA & Automation',
+  'HR/Behavioral',
+];
+
 export type DifficultyType = 'Beginner' | 'Intermediate' | 'Advanced';
 
 export interface User {

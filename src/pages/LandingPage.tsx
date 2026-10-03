@@ -3,6 +3,12 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { PreparationTips } from '../components/PreparationTips';
 import {
+  GlassCard,
+  PrimaryButton,
+  PillButton,
+  Badge,
+} from '../components/ui';
+import {
   Sparkles,
   Bot,
   Mic,
@@ -16,20 +22,11 @@ import {
   Zap,
   Play,
   Volume2,
-  Terminal,
-  Layers,
   ChevronDown,
   ChevronUp,
-  Cpu,
   Target,
-  TrendingUp,
-  Briefcase,
-  Award,
-  CheckCircle,
-  HelpCircle,
-  Building2,
   Clock,
-  Sparkle
+  HelpCircle,
 } from 'lucide-react';
 
 interface TrackDemo {
@@ -58,7 +55,7 @@ const DEMO_TRACKS: TrackDemo[] = [
     sentimentScore: 95,
     critique: 'Excellent breakdown of atomic Lua scripts to eliminate race conditions. Mentioned memory overhead tradeoffs clearly.',
     audioDuration: '01:14',
-    tags: ['Redis', 'Distributed Systems', 'Sliding Window', 'Atomic Scripts']
+    tags: ['Redis', 'Distributed Systems', 'Sliding Window', 'Atomic Scripts'],
   },
   {
     id: 'system_design',
@@ -71,7 +68,7 @@ const DEMO_TRACKS: TrackDemo[] = [
     sentimentScore: 92,
     critique: 'Superb partitioning strategy with Kafka and edge caching. Good awareness of backpressure handling during viral stream spikes.',
     audioDuration: '01:42',
-    tags: ['WebSockets', 'Kafka', 'Edge Caching', 'Fan-out Architecture']
+    tags: ['WebSockets', 'Kafka', 'Edge Caching', 'Fan-out Architecture'],
   },
   {
     id: 'aiml',
@@ -84,7 +81,7 @@ const DEMO_TRACKS: TrackDemo[] = [
     sentimentScore: 90,
     critique: 'Accurate explanation of Low-Rank Adaptation hyperparameters and replay regularization. Very structured response.',
     audioDuration: '01:05',
-    tags: ['LoRA', 'Catastrophic Forgetting', 'PEFT', 'Perplexity']
+    tags: ['LoRA', 'Catastrophic Forgetting', 'PEFT', 'Perplexity'],
   },
   {
     id: 'behavioral',
@@ -97,19 +94,19 @@ const DEMO_TRACKS: TrackDemo[] = [
     sentimentScore: 96,
     critique: 'Flawless STAR framing. Focused on data-driven consensus rather than personal opinion, showing strong executive maturity.',
     audioDuration: '01:28',
-    tags: ['STAR Method', 'Conflict Resolution', 'Data-Driven', 'Executive Comms']
-  }
+    tags: ['STAR Method', 'Conflict Resolution', 'Data-Driven', 'Executive Comms'],
+  },
 ];
 
 const FAANG_COMPANIES = [
-  { name: 'Google', role: 'L4/L5 SWE & SRE', color: 'from-blue-500 to-emerald-500' },
-  { name: 'Meta', role: 'E4/E5 Fullstack & AI', color: 'from-blue-600 to-indigo-600' },
-  { name: 'Amazon', role: 'SDE II & Bar Raiser', color: 'from-amber-500 to-orange-600' },
-  { name: 'Microsoft', role: 'Senior Cloud & Systems', color: 'from-cyan-500 to-blue-600' },
-  { name: 'Apple', role: 'Core OS & Hardware SW', color: 'from-slate-600 to-slate-800' },
-  { name: 'Netflix', role: 'Senior Distributed Eng', color: 'from-rose-600 to-red-700' },
-  { name: 'Uber', role: 'Staff Real-Time Infra', color: 'from-slate-800 to-slate-950' },
-  { name: 'OpenAI', role: 'Applied AI & Platform', color: 'from-teal-500 to-emerald-600' },
+  { name: 'Google', role: 'L4/L5 SWE & SRE' },
+  { name: 'Meta', role: 'E4/E5 Fullstack & AI' },
+  { name: 'Amazon', role: 'SDE II & Bar Raiser' },
+  { name: 'Microsoft', role: 'Senior Cloud & Systems' },
+  { name: 'Apple', role: 'Core OS & Hardware SW' },
+  { name: 'Netflix', role: 'Senior Distributed Eng' },
+  { name: 'Uber', role: 'Staff Real-Time Infra' },
+  { name: 'OpenAI', role: 'Applied AI & Platform' },
 ];
 
 export const LandingPage: React.FC = () => {
@@ -139,93 +136,90 @@ export const LandingPage: React.FC = () => {
   const faqs = [
     {
       q: 'How does InterviewAI simulate real voice interviews?',
-      a: 'InterviewAI leverages browser Speech-to-Text with low-latency Web Audio capture and Google Gemini multimodal reasoning. The AI listens to your voice answers, transcribes them with high fidelity, and generates dynamic follow-up probing questions just like a senior human interviewer.'
+      a: 'InterviewAI leverages browser Speech-to-Text with low-latency Web Audio capture and Google Gemini multimodal reasoning. The AI listens to your voice answers, transcribes them with high fidelity, and generates dynamic follow-up probing questions just like a senior human interviewer.',
     },
     {
       q: 'Can I upload my actual resume and target job descriptions?',
-      a: 'Yes! You can upload your PDF or DOCX resume or paste any job description. InterviewAI automatically analyzes your specific tech stack, frameworks, and past projects to generate ultra-relevant questions and identify potential resume gaps.'
+      a: 'Yes! You can upload your PDF or DOCX resume or paste any job description. InterviewAI automatically analyzes your specific tech stack, frameworks, and past projects to generate ultra-relevant questions and identify potential resume gaps.',
     },
     {
       q: 'What interview tracks and roles are supported?',
-      a: 'We support 10 specialized tracks: Software Development (Backend, Frontend, Full Stack), System Design, Data Science, AI/ML Engineering, DevOps & Cloud, Cybersecurity, Product Management, QA & Test Automation, and HR/Behavioral STAR method.'
+      a: 'We support 10 specialized tracks: Software Development (Backend, Frontend, Full Stack), System Design, Data Science, AI/ML Engineering, DevOps & Cloud, Cybersecurity, Product Management, QA & Test Automation, and HR/Behavioral STAR method.',
     },
     {
       q: 'Are the questions customized for specific companies like Google or Amazon?',
-      a: 'Absolutely. You can select company presets (FAANG, Tier-1 Tech, High-Growth Unicorns, Seed Startups). For Amazon, questions incorporate Leadership Principles; for Google, deep algorithmic and scalability rigor.'
+      a: 'Absolutely. You can select company presets (FAANG, Tier-1 Tech, High-Growth Unicorns, Seed Startups). For Amazon, questions incorporate Leadership Principles; for Google, deep algorithmic and scalability rigor.',
     },
     {
       q: 'Can I export my scorecard and improvement roadmap?',
-      a: 'Yes, after every interview round you receive an in-depth scorecard with radar analytics, speech pace feedback, model answers with sample code, and a downloadable professional PDF report you can save or share.'
-    }
+      a: 'Yes, after every interview round you receive an in-depth scorecard with radar analytics, speech pace feedback, model answers with sample code, and a downloadable professional PDF report you can save or share.',
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-indigo-500 selection:text-white transition-colors">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-10 pb-20 md:pt-16 md:pb-28">
-        {/* Background glow & mesh effects */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-indigo-500/15 dark:bg-indigo-600/25 blur-[140px] rounded-full pointer-events-none" />
-        <div className="absolute top-1/3 right-10 w-[350px] h-[350px] bg-purple-500/15 dark:bg-pink-600/20 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-[300px] h-[300px] bg-emerald-500/10 dark:bg-cyan-600/15 blur-[110px] rounded-full pointer-events-none" />
-
+    <div className="min-h-screen text-[#F8F4E9] flex flex-col selection:bg-[#935073] selection:text-[#F8F4E9]">
+      {/* HERO SECTION */}
+      <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/90 dark:bg-indigo-950/80 border border-indigo-200/80 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-6 shadow-sm backdrop-blur-md">
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[rgba(80,45,85,0.4)] border border-[rgba(246,219,192,0.3)] text-[#F6DBC0] text-xs font-bold mb-6 shadow-[0_0_20px_rgba(147,80,115,0.3)] backdrop-blur-md">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600 dark:bg-indigo-400"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F6DBC0] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F6DBC0]" />
             </span>
-            <span>Next-Gen AI Mock Interview Platform</span>
-            <span className="bg-indigo-100 dark:bg-indigo-500/30 text-indigo-800 dark:text-indigo-200 px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide">v2.5 Live</span>
+            <span>Next-Gen AI Voice Coaching Platform</span>
+            <span className="bg-[rgba(147,80,115,0.4)] text-[#F8F4E9] px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide">
+              Gemini 3.7
+            </span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] max-w-4xl mx-auto text-slate-900 dark:text-white">
-            Land Your Dream Tech Job with{' '}
-            <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 dark:from-indigo-400 dark:via-purple-300 dark:to-pink-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] max-w-4xl mx-auto text-[#F8F4E9]">
+            Master Tech & FAANG Interviews with{' '}
+            <span className="bg-gradient-to-r from-[#F8F4E9] via-[#F6DBC0] to-[#935073] bg-clip-text text-transparent">
               Real-Time AI Voice Coaching
             </span>
           </h1>
 
-          <p className="mt-6 text-base sm:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed font-medium">
+          <p className="mt-6 text-base sm:text-xl text-[rgba(248,244,233,0.7)] max-w-3xl mx-auto leading-relaxed font-medium">
             Practice realistic mock interviews tailored to your exact role, target company, and uploaded resume. Get instant speech transcription critiques, live follow-up grilling, and personalized study roadmaps.
           </p>
 
           {/* CTA Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to={user ? '/track-selection' : '/register'}
-              className="w-full sm:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2.5 text-base group"
+            <PrimaryButton
+              onClick={() => (user ? window.location.assign('/track-selection') : window.location.assign('/register'))}
+              size="lg"
+              icon={<Sparkles className="w-5 h-5 text-[#F6DBC0]" />}
             >
-              <Sparkles className="w-5 h-5 text-amber-300 group-hover:rotate-12 transition-transform" />
-              <span>{user ? 'Enter Interview Room' : 'Start Free Mock Interview'}</span>
-              <ArrowRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition-transform" />
-            </Link>
+              {user ? 'Enter Interview Room' : 'Start Free Mock Interview'}
+            </PrimaryButton>
 
-            <a
-              href="#interactive-demo"
-              className="w-full sm:w-auto px-7 py-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 font-bold rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2.5 text-base"
-            >
-              <Bot className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-              <span>Explore Live Interactive Demo</span>
+            <a href="#interactive-demo">
+              <PillButton
+                size="lg"
+                icon={<Bot className="w-5 h-5 text-[#F6DBC0]" />}
+              >
+                Explore Live Voice Demo
+              </PillButton>
             </a>
           </div>
 
           {/* Trust badges */}
-          <div className="mt-12 flex items-center justify-center gap-6 sm:gap-8 text-slate-600 dark:text-slate-400 text-xs sm:text-sm font-semibold flex-wrap">
+          <div className="mt-12 flex items-center justify-center gap-6 sm:gap-8 text-[rgba(248,244,233,0.65)] text-xs sm:text-sm font-semibold flex-wrap">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
               <span>10 Role Tracks (SDE, System Design, AI)</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
               <span>Low-Latency Voice Speech Recognition</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
               <span>AI Resume & JD Skill Matcher</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
               <span>Exportable Scorecards & PDF Reports</span>
             </div>
           </div>
@@ -233,213 +227,180 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* Target Companies Banner */}
-      <section className="py-8 bg-slate-100/70 dark:bg-slate-900/40 border-y border-slate-200/80 dark:border-slate-800/80">
+      <section className="py-8 bg-[rgba(26,15,34,0.6)] border-y border-[rgba(248,244,233,0.08)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-6">
+          <p className="text-center text-xs font-extrabold uppercase tracking-widest text-[#F6DBC0] mb-6">
             Curated Question Banks & Rubrics for Top Tier Tech
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             {FAANG_COMPANIES.map((company, i) => (
               <div
                 key={i}
-                className="bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800/80 rounded-xl p-3 text-center shadow-2xs hover:border-indigo-400 dark:hover:border-indigo-500/50 transition-all hover:scale-105"
+                className="bg-[rgba(42,27,51,0.7)] border border-[rgba(248,244,233,0.06)] rounded-2xl p-3 text-center shadow-sm hover:border-[rgba(147,80,115,0.4)] transition-all hover:scale-105"
               >
-                <span className="font-extrabold text-sm text-slate-900 dark:text-white block">{company.name}</span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium block truncate mt-0.5">{company.role}</span>
+                <span className="font-extrabold text-sm text-[#F8F4E9] block">{company.name}</span>
+                <span className="text-[10px] text-[rgba(248,244,233,0.5)] font-mono block truncate mt-0.5">
+                  {company.role}
+                </span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Interactive Mock Preview Simulator */}
-      <section id="interactive-demo" className="py-20 bg-white dark:bg-slate-900/60 border-b border-slate-200/80 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-3 border border-indigo-200 dark:border-indigo-800">
-              <Terminal className="w-3.5 h-3.5" />
-              <span>Interactive Cockpit Simulator</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-              Experience the Live Interview Room
-            </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base mt-2 max-w-2xl mx-auto font-medium">
-              Click through different interview tracks below to test how our AI interviewer listens, evaluates, and provides instant scoring critiques.
-            </p>
-          </div>
+      {/* INTERACTIVE VOICE AI PREVIEW (Hero Live Demo) */}
+      <section id="interactive-demo" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-10">
+          <Badge variant="peach" size="sm" className="mb-3">
+            Live AI Simulation
+          </Badge>
+          <h2 className="text-3xl sm:text-4xl font-black text-[#F8F4E9]">
+            Experience Real-Time Voice Grilling
+          </h2>
+          <p className="mt-2 text-xs sm:text-sm text-[rgba(248,244,233,0.65)] max-w-xl mx-auto font-medium">
+            Listen to how Gemini evaluates verbal depth, architectural clarity, and confidence.
+          </p>
 
-          {/* Track Selector Tabs */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+          {/* Track selector tabs */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
             {DEMO_TRACKS.map((track) => (
               <button
                 key={track.id}
-                onClick={() => {
-                  setSelectedDemo(track);
-                  setIsPlayingDemo(false);
-                }}
-                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 ${
+                onClick={() => setSelectedDemo(track)}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   selectedDemo.id === track.id
-                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/20 scale-105'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    ? 'bg-[#935073] text-[#F8F4E9] border border-[rgba(246,219,192,0.4)] shadow-[0_0_15px_rgba(147,80,115,0.45)]'
+                    : 'bg-[rgba(26,15,34,0.6)] text-[rgba(248,244,233,0.6)] border border-[rgba(248,244,233,0.06)] hover:text-[#F8F4E9]'
                 }`}
               >
-                <span>{track.name}</span>
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-semibold ${
-                  selectedDemo.id === track.id ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
-                }`}>
-                  {track.badge}
-                </span>
+                {track.name}
               </button>
             ))}
           </div>
+        </div>
 
-          {/* Simulated Interview Cockpit Box */}
-          <div className="max-w-5xl mx-auto bg-slate-900 text-white rounded-3xl shadow-2xl border border-slate-800 overflow-hidden">
-            {/* Cockpit Window Header */}
-            <div className="bg-slate-950/80 px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex gap-1.5">
-                  <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                  <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                </div>
-                <span className="text-xs font-mono font-bold text-slate-400">
-                  AI Cockpit — Track: {selectedDemo.name} ({selectedDemo.badge})
+        {/* Demo Stage GlassCard */}
+        <GlassCard className="p-6 sm:p-8 space-y-6 border-[rgba(147,80,115,0.35)] shadow-[0_20px_45px_rgba(15,7,20,0.85)]">
+          {/* Question Box */}
+          <div className="p-5 rounded-2xl bg-[rgba(26,15,34,0.7)] border border-[rgba(248,244,233,0.08)]">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-bold tracking-wider text-[#F6DBC0] uppercase flex items-center gap-1.5">
+                <BrainCircuit className="w-4 h-4 text-[#F6DBC0]" />
+                <span>AI Interviewer Prompt ({selectedDemo.badge})</span>
+              </span>
+              <button
+                onClick={() => setIsPlayingDemo(!isPlayingDemo)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#935073] text-[#F8F4E9] text-xs font-bold hover:bg-[#a65d83] transition shadow-xs cursor-pointer"
+              >
+                {isPlayingDemo ? <Volume2 className="w-3.5 h-3.5 text-[#F6DBC0] animate-pulse" /> : <Play className="w-3.5 h-3.5" />}
+                <span>{isPlayingDemo ? 'Playing AI Voice...' : 'Listen to Prompt'}</span>
+              </button>
+            </div>
+            <p className="text-base sm:text-lg font-bold text-[#F8F4E9] leading-snug">
+              "{selectedDemo.question}"
+            </p>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {selectedDemo.tags.map((tag, idx) => (
+                <span key={idx} className="px-2.5 py-0.5 rounded-full bg-[rgba(147,80,115,0.2)] text-[#F6DBC0] text-[11px] font-mono border border-[rgba(147,80,115,0.3)]">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Transcript & Waveform + Instant Critique */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
+            <div className="md:col-span-7 p-5 rounded-2xl bg-[rgba(26,15,34,0.65)] border border-[rgba(248,244,233,0.06)] flex flex-col justify-between space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#7FE3B9] flex items-center gap-2">
+                  <Mic className="w-4 h-4 text-[#7FE3B9] animate-pulse" />
+                  Live Candidate Voice Transcription
+                </span>
+                <span className="text-xs font-mono font-bold text-[rgba(248,244,233,0.5)]">
+                  {selectedDemo.audioDuration} / 02:00
                 </span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono font-bold">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  Live AI Evaluator Connected
-                </span>
+
+              {/* Violet Dusk Audio Waveform Equalizer */}
+              <div className="h-12 bg-[rgba(15,7,20,0.7)] rounded-xl flex items-center justify-center gap-1.5 px-4 border border-[rgba(248,244,233,0.06)]">
+                {[35, 75, 45, 95, 60, 100, 55, 85, 40, 95, 70, 45, 65, 80, 50, 90, 45, 70, 30, 85].map((h, i) => (
+                  <div
+                    key={i}
+                    style={{ height: `${h}%` }}
+                    className="w-1.5 bg-gradient-to-t from-[#502D55] via-[#935073] to-[#F6DBC0] rounded-full animate-pulse"
+                  />
+                ))}
               </div>
+
+              <p className="text-xs sm:text-sm text-[rgba(248,244,233,0.8)] italic font-mono leading-relaxed bg-[rgba(42,27,51,0.5)] p-3.5 rounded-xl border border-[rgba(248,244,233,0.04)]">
+                "{selectedDemo.sampleAnswer}"
+              </p>
             </div>
 
-            <div className="p-6 sm:p-8 space-y-6">
-              {/* Question Box */}
-              <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-5 relative overflow-hidden">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold tracking-wider text-indigo-400 uppercase flex items-center gap-1.5">
-                    <BrainCircuit className="w-4 h-4" />
-                    AI Interviewer Prompt
+            {/* Instant AI Evaluation Card */}
+            <div className="md:col-span-5 p-5 rounded-2xl bg-[rgba(54,34,66,0.7)] border border-[rgba(147,80,115,0.4)] shadow-[0_0_20px_rgba(147,80,115,0.25)] flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-xs font-extrabold text-[#F6DBC0] uppercase tracking-wider flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-[#F6DBC0]" />
+                    Instant AI Critique
                   </span>
-                  <button
-                    onClick={() => setIsPlayingDemo(!isPlayingDemo)}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-xs"
-                  >
-                    {isPlayingDemo ? <Volume2 className="w-3.5 h-3.5 animate-pulse text-amber-300" /> : <Play className="w-3.5 h-3.5" />}
-                    <span>{isPlayingDemo ? 'Playing AI Voice...' : 'Listen to Prompt'}</span>
-                  </button>
+                  <Badge variant="mint" size="sm">Passed</Badge>
                 </div>
-                <p className="text-base sm:text-lg font-bold text-white leading-snug">
-                  "{selectedDemo.question}"
+
+                <div className="grid grid-cols-3 gap-2 text-center mb-4">
+                  <div className="p-2.5 rounded-xl bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.06)]">
+                    <span className="text-xl font-black font-dot text-[#F6DBC0]">{selectedDemo.technicalScore}</span>
+                    <span className="text-[10px] font-bold text-[rgba(248,244,233,0.5)] block uppercase">Technical</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.06)]">
+                    <span className="text-xl font-black font-dot text-[#F6DBC0]">{selectedDemo.commScore}</span>
+                    <span className="text-[10px] font-bold text-[rgba(248,244,233,0.5)] block uppercase">Clarity</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.06)]">
+                    <span className="text-xl font-black font-dot text-[#7FE3B9]">{selectedDemo.sentimentScore}</span>
+                    <span className="text-[10px] font-bold text-[rgba(248,244,233,0.5)] block uppercase">Confidence</span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-[rgba(248,244,233,0.85)] leading-relaxed font-medium bg-[rgba(26,15,34,0.5)] p-3 rounded-xl border border-[rgba(248,244,233,0.06)]">
+                  "{selectedDemo.critique}"
                 </p>
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {selectedDemo.tags.map((tag, idx) => (
-                    <span key={idx} className="px-2.5 py-0.5 rounded-full bg-slate-700 text-slate-300 text-[11px] font-mono">
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
               </div>
 
-              {/* Candidate Voice Transcript & Waveform */}
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-5">
-                <div className="md:col-span-7 bg-slate-950/70 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-300 flex items-center gap-2">
-                      <Mic className="w-4 h-4 text-emerald-400 animate-pulse" />
-                      Live Candidate Voice Transcription
-                    </span>
-                    <span className="text-xs font-mono font-bold text-slate-400">{selectedDemo.audioDuration} / 02:00</span>
-                  </div>
-
-                  {/* Audio Equalizer Simulation */}
-                  <div className="h-12 bg-slate-900/90 rounded-xl flex items-center justify-center gap-1.5 px-4 border border-slate-800">
-                    {[35, 75, 45, 95, 60, 100, 55, 85, 40, 95, 70, 45, 65, 80, 50, 90, 45, 70, 30, 85].map((h, i) => (
-                      <div
-                        key={i}
-                        style={{ height: `${h}%` }}
-                        className="w-1.5 bg-gradient-to-t from-indigo-500 to-purple-400 rounded-full animate-pulse"
-                      />
-                    ))}
-                  </div>
-
-                  <p className="text-xs sm:text-sm text-slate-300 italic font-medium leading-relaxed bg-slate-900/50 p-3.5 rounded-xl border border-slate-800">
-                    "{selectedDemo.sampleAnswer}"
-                  </p>
-                </div>
-
-                {/* Instant Evaluation Card */}
-                <div className="md:col-span-5 bg-gradient-to-br from-indigo-950/60 to-purple-950/40 border border-indigo-500/30 rounded-2xl p-5 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-extrabold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
-                        <Sparkles className="w-4 h-4 text-amber-400" />
-                        Instant AI Critique
-                      </span>
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                        Passed
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2 text-center mb-4">
-                      <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                        <span className="text-xl font-black text-indigo-400">{selectedDemo.technicalScore}</span>
-                        <span className="text-[10px] font-bold text-slate-400 block uppercase">Technical</span>
-                      </div>
-                      <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                        <span className="text-xl font-black text-purple-400">{selectedDemo.commScore}</span>
-                        <span className="text-[10px] font-bold text-slate-400 block uppercase">Clarity</span>
-                      </div>
-                      <div className="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                        <span className="text-xl font-black text-emerald-400">{selectedDemo.sentimentScore}</span>
-                        <span className="text-[10px] font-bold text-slate-400 block uppercase">Confidence</span>
-                      </div>
-                    </div>
-
-                    <p className="text-xs text-slate-300 leading-relaxed font-medium bg-slate-900/60 p-3 rounded-xl border border-indigo-500/20">
-                      "{selectedDemo.critique}"
-                    </p>
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-indigo-500/20 flex items-center justify-between text-xs text-indigo-300 font-semibold">
-                    <span>Probing follow-up unlocked</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </div>
-                </div>
+              <div className="mt-4 pt-3 border-t border-[rgba(248,244,233,0.08)] flex items-center justify-between text-xs text-[#F6DBC0] font-semibold">
+                <span>Adaptive follow-up question unlocked</span>
+                <ArrowRight className="w-4 h-4" />
               </div>
             </div>
           </div>
-        </div>
+        </GlassCard>
       </section>
 
-      {/* Interactive Salary & Readiness Assessment Tool */}
+      {/* SALARY & COMPENSATION CALCULATOR */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-purple-950 text-white rounded-3xl p-8 sm:p-12 border border-indigo-500/30 shadow-2xl relative overflow-hidden">
-          <div className="absolute right-0 top-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+        <GlassCard className="p-8 sm:p-12 border-[rgba(147,80,115,0.35)] shadow-[0_20px_50px_rgba(15,7,20,0.9)]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-xs font-bold border border-indigo-500/40">
-                <Target className="w-3.5 h-3.5 text-amber-300" />
-                <span>Interactive Career & Salary Calculator</span>
-              </div>
+              <Badge variant="peach" size="sm">
+                <Target className="w-3.5 h-3.5 text-[#F6DBC0] mr-1" />
+                Career & Salary Upside
+              </Badge>
 
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-black text-[#F8F4E9] tracking-tight">
                 Calculate Your Potential Compensation Bump
               </h2>
 
-              <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                Candidates who complete 4+ mock interview rounds with structured AI feedback improve their offer negotiation power by an average of 25-40%.
+              <p className="text-xs sm:text-sm text-[rgba(248,244,233,0.7)] leading-relaxed">
+                Candidates who complete 4+ mock interview rounds with structured AI speech critiques improve their offer negotiation power by an average of 25-40%.
               </p>
 
               {/* Sliders and Selectors */}
               <div className="space-y-5 pt-2">
                 <div>
-                  <div className="flex justify-between text-sm font-bold mb-2">
-                    <span className="text-slate-300">Years of Experience:</span>
-                    <span className="text-amber-400 font-mono">{yearsExp} {yearsExp === 1 ? 'Year' : 'Years'}</span>
+                  <div className="flex justify-between text-xs font-bold mb-2">
+                    <span className="text-[rgba(248,244,233,0.7)]">Years of Experience:</span>
+                    <span className="text-[#F6DBC0] font-mono font-black">{yearsExp} {yearsExp === 1 ? 'Year' : 'Years'}</span>
                   </div>
                   <input
                     type="range"
@@ -447,17 +408,14 @@ export const LandingPage: React.FC = () => {
                     max="15"
                     value={yearsExp}
                     onChange={(e) => setYearsExp(Number(e.target.value))}
-                    className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+                    className="w-full h-2 bg-[rgba(26,15,34,0.8)] rounded-lg appearance-none cursor-pointer accent-[#935073]"
                   />
-                  <div className="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
-                    <span>1 Year (Junior)</span>
-                    <span>5 Years (Senior)</span>
-                    <span>15+ Years (Staff/Principal)</span>
-                  </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-bold text-slate-300 block mb-2">Target Role Level:</label>
+                  <label className="text-xs font-bold text-[rgba(248,244,233,0.7)] block mb-2">
+                    Target Role Level:
+                  </label>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {[
                       { id: 'SDE', label: 'Senior SWE' },
@@ -468,10 +426,10 @@ export const LandingPage: React.FC = () => {
                       <button
                         key={role.id}
                         onClick={() => setSelectedTargetRole(role.id as any)}
-                        className={`py-2 px-3 rounded-xl text-xs font-bold transition-all ${
+                        className={`py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                           selectedTargetRole === role.id
-                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/30 ring-2 ring-indigo-400'
-                            : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                            ? 'bg-[#935073] text-[#F8F4E9] border border-[rgba(246,219,192,0.4)] shadow-[0_0_12px_rgba(147,80,115,0.45)]'
+                            : 'bg-[rgba(26,15,34,0.6)] text-[rgba(248,244,233,0.6)] border border-[rgba(248,244,233,0.06)] hover:text-[#F8F4E9]'
                         }`}
                       >
                         {role.label}
@@ -482,248 +440,241 @@ export const LandingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Calculated Target Card */}
-            <div className="lg:col-span-5 bg-slate-900/90 border border-indigo-500/40 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl text-center">
+            {/* Compensation Showcase Card */}
+            <div className="lg:col-span-5 p-6 sm:p-8 rounded-3xl bg-[rgba(26,15,34,0.7)] border border-[rgba(147,80,115,0.35)] space-y-6 text-center shadow-xl">
               <div>
-                <span className="text-xs font-extrabold uppercase tracking-wider text-indigo-300 block mb-1">
+                <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#F6DBC0] block mb-1">
                   Projected Market Total Compensation
                 </span>
-                <div className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-300">
-                  ${calculateTargetSalary().toLocaleString()}<span className="text-xl text-slate-400 font-normal">/yr</span>
+                <div className="text-4xl sm:text-5xl font-black font-dot text-[#F8F4E9] tracking-tight">
+                  ${calculateTargetSalary().toLocaleString()}<span className="text-xl text-[rgba(248,244,233,0.5)] font-normal">/yr</span>
                 </div>
-                <span className="text-xs text-slate-400 block mt-1 font-medium">Includes Base Salary + Equity + Bonus Tier</span>
+                <span className="text-xs text-[rgba(248,244,233,0.5)] block mt-1 font-mono">
+                  Base + Equity + Bonus Tier
+                </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800 text-left">
-                <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Estimated Prep Time</span>
-                  <span className="text-lg font-extrabold text-white">{calculateReadinessDays()} Days</span>
-                  <span className="text-[10px] text-emerald-400 block font-medium">at 3 sessions/wk</span>
+              <div className="grid grid-cols-2 gap-3 pt-4 border-t border-[rgba(248,244,233,0.08)] text-left">
+                <div className="p-3 rounded-xl bg-[rgba(42,27,51,0.6)] border border-[rgba(248,244,233,0.06)]">
+                  <span className="text-[10px] font-bold text-[rgba(248,244,233,0.5)] uppercase block">Prep Time</span>
+                  <span className="text-base font-black font-dot text-[#F8F4E9]">{calculateReadinessDays()} Days</span>
+                  <span className="text-[10px] text-[#7FE3B9] block font-mono">3 sessions/wk</span>
                 </div>
-                <div className="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase block">Confidence Lift</span>
-                  <span className="text-lg font-extrabold text-amber-300">+92%</span>
-                  <span className="text-[10px] text-slate-400 block font-medium">STAR mastery</span>
+                <div className="p-3 rounded-xl bg-[rgba(42,27,51,0.6)] border border-[rgba(248,244,233,0.06)]">
+                  <span className="text-[10px] font-bold text-[rgba(248,244,233,0.5)] uppercase block">Confidence Lift</span>
+                  <span className="text-base font-black font-dot text-[#F6DBC0]">+92%</span>
+                  <span className="text-[10px] text-[rgba(248,244,233,0.5)] block font-mono">STAR mastery</span>
                 </div>
               </div>
 
-              <Link
-                to={user ? '/track-selection' : '/register'}
-                className="w-full py-3.5 px-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm"
+              <PrimaryButton
+                onClick={() => (user ? window.location.assign('/track-selection') : window.location.assign('/register'))}
+                fullWidth
+                size="md"
+                icon={<Sparkles className="w-4 h-4 text-[#F6DBC0]" />}
               >
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>Start Tailored Prep Track</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+                Start Tailored Prep Track
+              </PrimaryButton>
             </div>
           </div>
-        </div>
+        </GlassCard>
       </section>
 
-      {/* Feature Highlights Grid */}
-      <section id="features" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-3 border border-indigo-200 dark:border-indigo-800">
-            <Zap className="w-3.5 h-3.5 text-amber-500" />
-            <span>Built for Elite Career Acceleration</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+      {/* FEATURE BENTO GRID */}
+      <section id="features" className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-14">
+          <Badge variant="peach" size="sm" className="mb-3">
+            Core Architecture
+          </Badge>
+          <h2 className="text-3xl sm:text-4xl font-black text-[#F8F4E9]">
             Everything You Need to Ace Any Interview
           </h2>
-          <p className="mt-3 text-slate-600 dark:text-slate-400 max-w-xl mx-auto font-medium">
+          <p className="mt-2 text-xs sm:text-sm text-[rgba(248,244,233,0.65)] max-w-xl mx-auto font-medium">
             From technical whiteboarding and algorithm edge cases to behavioral leadership rubrics.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-7 rounded-3xl hover:border-indigo-400 dark:hover:border-indigo-500/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <GlassCard className="p-7 flex flex-col justify-between">
             <div>
-              <div className="w-13 h-13 rounded-2xl bg-indigo-50 dark:bg-indigo-600/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-[rgba(80,45,85,0.7)] border border-[rgba(147,80,115,0.4)] flex items-center justify-center mb-5 text-[#F6DBC0]">
                 <Mic className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Voice & Speech Analytics</h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium">
+              <h3 className="text-lg font-bold text-[#F8F4E9] mb-2">Voice & Speech Analytics</h3>
+              <p className="text-xs text-[rgba(248,244,233,0.65)] leading-relaxed font-medium">
                 Record real-time answers using high-frequency audio visualizers. Gemini analyzes speaking pace, filler words, technical keyword density, and structural clarity.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center text-xs font-bold text-indigo-600 dark:text-indigo-400 gap-1.5">
+            <div className="mt-6 pt-4 border-t border-[rgba(248,244,233,0.06)] flex items-center text-xs font-bold text-[#7FE3B9] gap-1.5">
               <span>Speech-to-Text Powered</span>
-              <CheckCircle className="w-3.5 h-3.5" />
+              <CheckCircle2 className="w-3.5 h-3.5" />
             </div>
-          </div>
+          </GlassCard>
 
-          <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-7 rounded-3xl hover:border-purple-400 dark:hover:border-purple-500/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <GlassCard className="p-7 flex flex-col justify-between">
             <div>
-              <div className="w-13 h-13 rounded-2xl bg-purple-50 dark:bg-purple-600/20 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-[rgba(80,45,85,0.7)] border border-[rgba(147,80,115,0.4)] flex items-center justify-center mb-5 text-[#F6DBC0]">
                 <BrainCircuit className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Contextual Follow-up Grilling</h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium">
+              <h3 className="text-lg font-bold text-[#F8F4E9] mb-2">Contextual Follow-Up Grilling</h3>
+              <p className="text-xs text-[rgba(248,244,233,0.65)] leading-relaxed font-medium">
                 Unlike static question banks, our AI remembers your previous answers and generates tailored follow-up inquiries to test depth, edge cases, and architectural tradeoffs.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center text-xs font-bold text-purple-600 dark:text-purple-400 gap-1.5">
-              <span>Dynamic Reasoning</span>
-              <CheckCircle className="w-3.5 h-3.5" />
+            <div className="mt-6 pt-4 border-t border-[rgba(248,244,233,0.06)] flex items-center text-xs font-bold text-[#F6DBC0] gap-1.5">
+              <span>Dynamic Multimodal Reasoning</span>
+              <CheckCircle2 className="w-3.5 h-3.5" />
             </div>
-          </div>
+          </GlassCard>
 
-          <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-7 rounded-3xl hover:border-emerald-400 dark:hover:border-emerald-500/50 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group">
+          <GlassCard className="p-7 flex flex-col justify-between">
             <div>
-              <div className="w-13 h-13 rounded-2xl bg-emerald-50 dark:bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-2xl bg-[rgba(80,45,85,0.7)] border border-[rgba(147,80,115,0.4)] flex items-center justify-center mb-5 text-[#F6DBC0]">
                 <FileCheck2 className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Resume & JD Skill Matching</h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed font-medium">
+              <h3 className="text-lg font-bold text-[#F8F4E9] mb-2">Resume & JD Skill Matching</h3>
+              <p className="text-xs text-[rgba(248,244,233,0.65)] leading-relaxed font-medium">
                 Upload your resume and paste target job descriptions. The system identifies skill overlaps and crafts targeted scenarios that match your exact stack.
               </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 gap-1.5">
-              <span>PDF & DOCX Support</span>
-              <CheckCircle className="w-3.5 h-3.5" />
+            <div className="mt-6 pt-4 border-t border-[rgba(248,244,233,0.06)] flex items-center text-xs font-bold text-[#7FE3B9] gap-1.5">
+              <span>PDF & Markdown Support</span>
+              <CheckCircle2 className="w-3.5 h-3.5" />
             </div>
-          </div>
+          </GlassCard>
         </div>
       </section>
 
-      {/* Preparation Strategy & Warmup Section */}
-      <section id="prep-tips" className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* PREPARATION TIPS SECTION */}
+      <section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <PreparationTips />
       </section>
 
-      {/* Candidate Testimonials & Success Stories */}
-      <section className="py-16 bg-white dark:bg-slate-900/40 border-y border-slate-200/80 dark:border-slate-800">
+      {/* TESTIMONIALS */}
+      <section className="py-16 bg-[rgba(26,15,34,0.6)] border-y border-[rgba(248,244,233,0.08)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
+            <h2 className="text-3xl font-black text-[#F8F4E9]">
               Proven Results from Top Candidates
             </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-medium">
+            <p className="text-xs text-[rgba(248,244,233,0.6)] mt-2 font-medium">
               Over 12,000+ mock interviews completed across Google, Meta, Amazon, Apple, and high-growth unicorns.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl space-y-4 shadow-sm">
-              <div className="flex text-amber-500 gap-1">
-                {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-500 text-amber-500" />)}
+            <GlassCard className="p-6 space-y-4">
+              <div className="flex text-[#F6DBC0] gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-[#F6DBC0] text-[#F6DBC0]" />
+                ))}
               </div>
-              <p className="text-sm text-slate-700 dark:text-slate-300 italic font-medium leading-relaxed">
+              <p className="text-xs text-[rgba(248,244,233,0.8)] italic font-medium leading-relaxed">
                 "The follow-up questions in the SDE track were insanely realistic. When I gave a high-level answer on database concurrency, InterviewAI pressed me on isolation levels and deadlock detection — exactly what happened in my Meta E5 loop."
               </p>
-              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div className="pt-2 border-t border-[rgba(248,244,233,0.06)] flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-slate-900 dark:text-white text-sm block">David Kim</span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">L5 Senior SWE @ Meta</span>
+                  <span className="font-bold text-[#F8F4E9] text-sm block">David Kim</span>
+                  <span className="text-xs text-[rgba(248,244,233,0.5)]">L5 Senior SWE @ Meta</span>
                 </div>
-                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                  $240k Offer
-                </span>
+                <Badge variant="mint" size="sm">$240k Offer</Badge>
               </div>
-            </div>
+            </GlassCard>
 
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl space-y-4 shadow-sm">
-              <div className="flex text-amber-500 gap-1">
-                {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-500 text-amber-500" />)}
+            <GlassCard className="p-6 space-y-4">
+              <div className="flex text-[#F6DBC0] gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-[#F6DBC0] text-[#F6DBC0]" />
+                ))}
               </div>
-              <p className="text-sm text-slate-700 dark:text-slate-300 italic font-medium leading-relaxed">
+              <p className="text-xs text-[rgba(248,244,233,0.8)] italic font-medium leading-relaxed">
                 "Uploading my resume and pasting the job description made every single question tailored to my actual stack. The STAR framework critiques helped me turn 5-minute rambles into crisp, impactful 90-second answers."
               </p>
-              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div className="pt-2 border-t border-[rgba(248,244,233,0.06)] flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-slate-900 dark:text-white text-sm block">Maya Lin</span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Principal PM @ Stripe</span>
+                  <span className="font-bold text-[#F8F4E9] text-sm block">Maya Lin</span>
+                  <span className="text-xs text-[rgba(248,244,233,0.5)]">Principal PM @ Stripe</span>
                 </div>
-                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                  $285k Offer
-                </span>
+                <Badge variant="mint" size="sm">$285k Offer</Badge>
               </div>
-            </div>
+            </GlassCard>
 
-            <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl space-y-4 shadow-sm">
-              <div className="flex text-amber-500 gap-1">
-                {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-500 text-amber-500" />)}
+            <GlassCard className="p-6 space-y-4">
+              <div className="flex text-[#F6DBC0] gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-[#F6DBC0] text-[#F6DBC0]" />
+                ))}
               </div>
-              <p className="text-sm text-slate-700 dark:text-slate-300 italic font-medium leading-relaxed">
+              <p className="text-xs text-[rgba(248,244,233,0.8)] italic font-medium leading-relaxed">
                 "The speech transcription feedback and visual radar scores were eye-opening. I practiced 6 rounds over a weekend and felt 10x more confident walking into my AWS System Design round."
               </p>
-              <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <div className="pt-2 border-t border-[rgba(248,244,233,0.06)] flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-slate-900 dark:text-white text-sm block">Marcus Vance</span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Solutions Architect @ AWS</span>
+                  <span className="font-bold text-[#F8F4E9] text-sm block">Marcus Vance</span>
+                  <span className="text-xs text-[rgba(248,244,233,0.5)]">Solutions Architect @ AWS</span>
                 </div>
-                <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                  $215k Offer
-                </span>
+                <Badge variant="mint" size="sm">$215k Offer</Badge>
               </div>
-            </div>
+            </GlassCard>
           </div>
         </div>
       </section>
 
-      {/* Frequently Asked Questions Accordion */}
+      {/* FAQ SECTION */}
       <section className="py-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-3 border border-indigo-200 dark:border-indigo-800">
-            <HelpCircle className="w-3.5 h-3.5" />
-            <span>Got Questions?</span>
-          </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white">
+          <Badge variant="peach" size="sm" className="mb-2">Got Questions?</Badge>
+          <h2 className="text-3xl font-black text-[#F8F4E9]">
             Frequently Asked Questions
           </h2>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-2xs transition-all"
-            >
+            <GlassCard key={index} className="p-0 overflow-hidden">
               <button
                 onClick={() => setActiveFaq(activeFaq === index ? null : index)}
-                className="w-full p-5 text-left flex items-center justify-between font-bold text-slate-900 dark:text-white gap-4 hover:text-indigo-600 dark:hover:text-indigo-400 transition"
+                className="w-full p-5 text-left flex items-center justify-between font-bold text-[#F8F4E9] gap-4 hover:text-[#F6DBC0] transition cursor-pointer"
               >
-                <span>{faq.q}</span>
+                <span className="text-sm">{faq.q}</span>
                 {activeFaq === index ? (
-                  <ChevronUp className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                  <ChevronUp className="w-4 h-4 text-[#F6DBC0] shrink-0" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
+                  <ChevronDown className="w-4 h-4 text-[rgba(248,244,233,0.5)] shrink-0" />
                 )}
               </button>
 
               {activeFaq === index && (
-                <div className="px-5 pb-5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium border-t border-slate-100 dark:border-slate-800/80 pt-3">
+                <div className="px-5 pb-5 text-xs text-[rgba(248,244,233,0.7)] leading-relaxed font-medium border-t border-[rgba(248,244,233,0.06)] pt-3">
                   {faq.a}
                 </div>
               )}
-            </div>
+            </GlassCard>
           ))}
         </div>
       </section>
 
-      {/* Call to Action Banner */}
-      <section className="py-20 bg-slate-900 text-white dark:bg-gradient-to-r dark:from-indigo-950 dark:via-purple-950 dark:to-slate-950 border-t border-slate-800 text-center relative overflow-hidden">
+      {/* BOTTOM CTA BANNER */}
+      <section className="py-20 text-center relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-indigo-300 text-xs font-bold border border-white/10">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>Zero Setup Required • Free Instant Access</span>
-          </div>
+          <Badge variant="peach" size="sm">
+            Zero Setup Required · Instant Access
+          </Badge>
 
-          <h2 className="text-3xl sm:text-5xl font-black text-white leading-tight">
+          <h2 className="text-3xl sm:text-5xl font-black text-[#F8F4E9] leading-tight">
             Ready to Ace Your Next Tech Interview?
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto font-medium">
+          <p className="text-xs sm:text-sm text-[rgba(248,244,233,0.7)] max-w-xl mx-auto font-medium">
             Start a free practice session today. Get instant voice feedback, score breakdowns, and concrete tips before your high-stakes real round.
           </p>
           <div className="pt-2">
-            <Link
-              to={user ? '/track-selection' : '/register'}
-              className="inline-flex items-center gap-2.5 px-9 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-base rounded-2xl shadow-xl shadow-indigo-600/30 hover:scale-105 transition-all"
+            <PrimaryButton
+              onClick={() => (user ? window.location.assign('/track-selection') : window.location.assign('/register'))}
+              size="lg"
+              icon={<Sparkles className="w-5 h-5 text-[#F6DBC0]" />}
             >
-              <Sparkles className="w-5 h-5 text-amber-300" />
-              <span>{user ? 'Enter Interview Room' : 'Start Free Practice Round'}</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+              {user ? 'Enter Interview Room' : 'Start Free Practice Round'}
+            </PrimaryButton>
           </div>
         </div>
       </section>

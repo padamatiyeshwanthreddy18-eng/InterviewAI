@@ -47,6 +47,14 @@
       "role": "admin",
       "passwordHash": "$2b$10$W8xI4k/Nbnp1yZ7emX.K/u0fR7paXS9NthQRhaaS.n3qMgkYiPq8m",
       "createdAt": "2026-10-03T09:52:17.805Z"
+    },
+    {
+      "id": "user-1791037656837-3bje",
+      "email": "candidate_1791037656684_muvk@interview.ai",
+      "name": "Candidate Guest",
+      "role": "user",
+      "passwordHash": "$2b$10$xPpFWD9x8tgdNdgrCWguJ.K/xwBSnEa4WSbyr9uGoy5OeeOY9Yh9O",
+      "createdAt": "2026-10-03T14:27:36.837Z"
     }
   ],
   "resumes": [

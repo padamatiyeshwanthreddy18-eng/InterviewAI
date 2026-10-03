@@ -587,18 +587,18 @@ export const PreparationTips: React.FC = () => {
   const IconComponent = currentPrep.icon;
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-5 shadow-xs relative overflow-hidden transition-all">
+    <div className="bg-[rgba(42,27,51,0.72)] backdrop-blur-xl border border-[rgba(248,244,233,0.08)] rounded-3xl p-6 sm:p-8 space-y-6 shadow-[0_10px_30px_-10px_rgba(15,7,20,0.5)] relative overflow-hidden transition-all text-[#F8F4E9]">
       {/* Header */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-4 border-b border-[rgba(248,244,233,0.08)]">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-xs font-bold border border-indigo-200/80 dark:border-indigo-500/30 mb-2">
-            <BookOpen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[rgba(147,80,115,0.3)] text-[#F6DBC0] text-xs font-bold border border-[rgba(246,219,192,0.3)] mb-2">
+            <BookOpen className="w-3.5 h-3.5 text-[#F6DBC0]" />
             Interview Preparation Guide
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-[#F8F4E9] tracking-tight">
             Track-Specific Strategy & Warmup Tips
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
+          <p className="text-xs text-[rgba(248,244,233,0.65)] font-medium mt-1">
             Boost your confidence before jumping into a mock session with expert frameworks and checklists.
           </p>
         </div>
@@ -606,18 +606,18 @@ export const PreparationTips: React.FC = () => {
         {/* Quick Practice Button for Selected Track */}
         <button
           onClick={() => navigate(`/track-selection?track=${encodeURIComponent(currentPrep.track)}`)}
-          className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 active:scale-95 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all flex items-center gap-2 shrink-0 cursor-pointer"
+          className="px-5 py-2.5 bg-gradient-to-r from-[#502D55] via-[#935073] to-[#a65d83] hover:from-[#603766] hover:to-[#ba6d95] active:scale-95 text-[#F8F4E9] border border-[rgba(246,219,192,0.3)] font-extrabold text-xs rounded-xl shadow-[0_0_16px_rgba(147,80,115,0.35)] transition-all flex items-center gap-2 shrink-0 cursor-pointer"
         >
           <span>Practice {currentPrep.track} Mock</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          <ArrowRight className="w-3.5 h-3.5 text-[#F6DBC0]" />
         </button>
       </div>
 
       {/* Track Selection Dropdown */}
-      <div className="bg-slate-50 dark:bg-slate-950/60 p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800">
+      <div className="bg-[rgba(26,15,34,0.6)] p-3.5 rounded-2xl border border-[rgba(248,244,233,0.08)]">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <label htmlFor="track-select-dropdown" className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5 shrink-0">
-            <Target className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+          <label htmlFor="track-select-dropdown" className="text-xs font-extrabold text-[#F8F4E9] uppercase tracking-wider flex items-center gap-1.5 shrink-0">
+            <Target className="w-4 h-4 text-[#F6DBC0]" />
             Select Role Track:
           </label>
           
@@ -625,12 +625,12 @@ export const PreparationTips: React.FC = () => {
             id="track-select-dropdown"
             value={activeTrack}
             onChange={(e) => setActiveTrack(e.target.value as TrackType)}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-slate-100 shadow-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#1A0F22] border border-[rgba(248,244,233,0.12)] text-xs font-bold text-[#F8F4E9] shadow-xs focus:outline-none focus:border-[#935073] cursor-pointer"
           >
             {(Object.keys(PREP_DATA) as TrackType[]).map((trackKey) => {
               const t = PREP_DATA[trackKey];
               return (
-                <option key={trackKey} value={trackKey}>
+                <option key={trackKey} value={trackKey} className="bg-[#1A0F22] text-[#F8F4E9]">
                   {t.label} ({t.track})
                 </option>
               );
@@ -640,22 +640,22 @@ export const PreparationTips: React.FC = () => {
       </div>
 
       {/* Active Track Highlight Banner */}
-      <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+      <div className="bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.08)] rounded-2xl p-5 space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className={`p-3 rounded-xl ${currentPrep.badgeBg} flex items-center justify-center shrink-0`}>
-              <IconComponent className="w-6 h-6" />
+            <div className="p-3 rounded-xl bg-[rgba(80,45,85,0.6)] border border-[rgba(246,219,192,0.3)] text-[#F6DBC0] flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(147,80,115,0.3)]">
+              <IconComponent className="w-6 h-6 text-[#F6DBC0]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-extrabold text-slate-900 dark:text-white">
+                <h3 className="text-base font-extrabold text-[#F8F4E9]">
                   {currentPrep.label}
                 </h3>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold border ${currentPrep.badgeBg}`}>
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full font-bold bg-[rgba(147,80,115,0.3)] text-[#F6DBC0] border border-[rgba(246,219,192,0.3)]">
                   {currentPrep.track}
                 </span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 font-medium mt-0.5">
+              <p className="text-xs text-[rgba(248,244,233,0.7)] font-medium mt-0.5">
                 {currentPrep.mindset}
               </p>
             </div>
@@ -663,27 +663,27 @@ export const PreparationTips: React.FC = () => {
         </div>
 
         {/* Quick Framework & Pacing Pill Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs border-t border-slate-200/80 dark:border-slate-800/80">
-          <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800/80 space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-amber-500" /> Recommended Answer Framework:
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs border-t border-[rgba(248,244,233,0.08)]">
+          <div className="bg-[rgba(42,27,51,0.7)] p-3.5 rounded-xl border border-[rgba(248,244,233,0.08)] space-y-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#F6DBC0] flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-[#F6DBC0]" /> Recommended Answer Framework:
             </span>
-            <p className="font-bold text-slate-800 dark:text-slate-200">{currentPrep.framework}</p>
+            <p className="font-bold text-[#F8F4E9]">{currentPrep.framework}</p>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800/80 space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1">
-              <Target className="w-3 h-3 text-indigo-500" /> Ideal Answer Pacing & Time Allocation:
+          <div className="bg-[rgba(42,27,51,0.7)] p-3.5 rounded-xl border border-[rgba(248,244,233,0.08)] space-y-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#F6DBC0] flex items-center gap-1">
+              <Target className="w-3 h-3 text-[#935073]" /> Ideal Answer Pacing & Time Allocation:
             </span>
-            <p className="font-bold text-slate-800 dark:text-slate-200">{currentPrep.idealPacing}</p>
+            <p className="font-bold text-[#F8F4E9]">{currentPrep.idealPacing}</p>
           </div>
         </div>
       </div>
 
       {/* Category Dropdown & Filter Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
-        <label htmlFor="category-select" className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+        <label htmlFor="category-select" className="text-xs font-extrabold text-[#F8F4E9] uppercase tracking-wider flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-[#F6DBC0]" />
           Filter Strategy Category:
         </label>
         
@@ -692,13 +692,14 @@ export const PreparationTips: React.FC = () => {
           id="category-select"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+          className="w-full sm:w-auto px-3.5 py-2 rounded-xl bg-[#1A0F22] border border-[rgba(248,244,233,0.12)] text-xs font-bold text-[#F8F4E9] focus:outline-none focus:border-[#935073] cursor-pointer"
         >
-          <option value="all">All Categories (Sequential View)</option>
-          <option value="coreTechnical">1. Core Technical Focus</option>
-          <option value="communication">2. Structuring Your Explanation</option>
-          <option value="pitfalls">3. Pitfalls to Avoid</option>
-          <option value="confidence">4. Confidence Boosters</option>
+          <option value="all" className="bg-[#1A0F22] text-[#F8F4E9]">All Categories (Sequential View)</option>
+          <option value="coreTechnical" className="bg-[#1A0F22] text-[#F8F4E9]">1. Core Technical Focus</option>
+          <option value="communication" className="bg-[#1A0F22] text-[#F8F4E9]">2. Structuring Your Explanation</option>
+          <option value="pitfalls" className="bg-[#1A0F22] text-[#F8F4E9]">3. Pitfalls to Avoid</option>
+          <option value="confidence" className="bg-[#1A0F22] text-[#F8F4E9]">4. Confidence Boosters</option>
+          <option value="actionableExercise" className="bg-[#1A0F22] text-[#F8F4E9]">5. 5-Minute Actionable Practice Exercise</option>
         </select>
       </div>
 
@@ -706,17 +707,17 @@ export const PreparationTips: React.FC = () => {
       <div className="space-y-4">
         {/* 1. Core Technical Focus */}
         {(selectedCategory === 'all' || selectedCategory === 'coreTechnical') && (
-          <div className="bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 space-y-3">
-            <div className="flex items-center gap-2 text-slate-900 dark:text-white">
-              <Target className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+          <div className="bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.08)] rounded-2xl p-5 space-y-3">
+            <div className="flex items-center gap-2 text-[#F8F4E9]">
+              <Target className="w-4 h-4 text-[#F6DBC0]" />
               <h4 className="text-xs font-extrabold uppercase tracking-wider">
                 {currentPrep.categories.coreTechnical.title}
               </h4>
             </div>
             <ul className="space-y-2">
               {currentPrep.categories.coreTechnical.items.map((item, idx) => (
-                <li key={idx} className="text-xs text-slate-700 dark:text-slate-300 font-medium flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 mt-1.5 shrink-0" />
+                <li key={idx} className="text-xs text-[rgba(248,244,233,0.8)] font-medium flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#935073] mt-1.5 shrink-0" />
                   <span className="leading-relaxed">{item}</span>
                 </li>
               ))}
@@ -726,17 +727,17 @@ export const PreparationTips: React.FC = () => {
 
         {/* 2. Communication & Structuring Strategy */}
         {(selectedCategory === 'all' || selectedCategory === 'communication') && (
-          <div className="bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 space-y-3">
-            <div className="flex items-center gap-2 text-slate-900 dark:text-white">
-              <Lightbulb className="w-4 h-4 text-amber-500" />
+          <div className="bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.08)] rounded-2xl p-5 space-y-3">
+            <div className="flex items-center gap-2 text-[#F8F4E9]">
+              <Lightbulb className="w-4 h-4 text-[#F6DBC0]" />
               <h4 className="text-xs font-extrabold uppercase tracking-wider">
                 {currentPrep.categories.communication.title}
               </h4>
             </div>
             <ul className="space-y-2">
               {currentPrep.categories.communication.items.map((item, idx) => (
-                <li key={idx} className="text-xs text-slate-700 dark:text-slate-300 font-medium flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0" />
+                <li key={idx} className="text-xs text-[rgba(248,244,233,0.8)] font-medium flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#F6DBC0] mt-1.5 shrink-0" />
                   <span className="leading-relaxed">{item}</span>
                 </li>
               ))}
@@ -746,17 +747,17 @@ export const PreparationTips: React.FC = () => {
 
         {/* 3. Common Pitfalls to Avoid */}
         {(selectedCategory === 'all' || selectedCategory === 'pitfalls') && (
-          <div className="bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 space-y-3">
-            <div className="flex items-center gap-2 text-slate-900 dark:text-white">
-              <AlertTriangle className="w-4 h-4 text-rose-500" />
-              <h4 className="text-xs font-extrabold uppercase tracking-wider">
+          <div className="bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.08)] rounded-2xl p-5 space-y-3">
+            <div className="flex items-center gap-2 text-[#F8F4E9]">
+              <AlertTriangle className="w-4 h-4 text-[#E57373]" />
+              <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#E57373]">
                 {currentPrep.categories.pitfalls.title}
               </h4>
             </div>
             <ul className="space-y-2">
               {currentPrep.categories.pitfalls.items.map((item, idx) => (
-                <li key={idx} className="text-xs text-slate-700 dark:text-slate-300 font-medium flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 mt-1.5 shrink-0" />
+                <li key={idx} className="text-xs text-[rgba(248,244,233,0.8)] font-medium flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#E57373] mt-1.5 shrink-0" />
                   <span className="leading-relaxed">{item}</span>
                 </li>
               ))}
@@ -766,33 +767,111 @@ export const PreparationTips: React.FC = () => {
 
         {/* 4. Confidence & Poise Boosters */}
         {(selectedCategory === 'all' || selectedCategory === 'confidence') && (
-          <div className="bg-slate-50/60 dark:bg-slate-950/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl p-5 space-y-3">
-            <div className="flex items-center gap-2 text-slate-900 dark:text-white">
-              <Zap className="w-4 h-4 text-emerald-500" />
-              <h4 className="text-xs font-extrabold uppercase tracking-wider">
+          <div className="bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.08)] rounded-2xl p-5 space-y-3">
+            <div className="flex items-center gap-2 text-[#F8F4E9]">
+              <Zap className="w-4 h-4 text-[#7FE3B9]" />
+              <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#7FE3B9]">
                 {currentPrep.categories.confidence.title}
               </h4>
             </div>
             <ul className="space-y-2">
               {currentPrep.categories.confidence.items.map((item, idx) => (
-                <li key={idx} className="text-xs text-slate-700 dark:text-slate-300 font-medium flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                <li key={idx} className="text-xs text-[rgba(248,244,233,0.8)] font-medium flex items-start gap-2.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#7FE3B9] mt-1.5 shrink-0" />
                   <span className="leading-relaxed">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
         )}
+
+        {/* 5. 5-Minute Actionable Practice Exercise */}
+        {(selectedCategory === 'all' || selectedCategory === 'actionableExercise') && (
+          <div className="bg-gradient-to-r from-[rgba(80,45,85,0.4)] to-[rgba(147,80,115,0.25)] border border-[rgba(246,219,192,0.3)] rounded-2xl p-5 space-y-4 shadow-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[rgba(248,244,233,0.08)] pb-3">
+              <div className="flex items-center gap-2 text-[#F8F4E9]">
+                <Sparkles className="w-4 h-4 text-[#F6DBC0]" />
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#F6DBC0]">
+                  5-Minute Actionable Practice Exercise ({currentPrep.track})
+                </h4>
+              </div>
+              <span className="text-[11px] font-mono font-bold text-[#7FE3B9] px-2.5 py-0.5 rounded-full bg-[rgba(127,227,185,0.12)] border border-[rgba(127,227,185,0.3)] w-fit">
+                ⏱️ 5-Minute Drill
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-xs font-bold text-[#F8F4E9] block">
+                Practice Prompt:
+              </span>
+              <p className="text-xs text-[#F6DBC0] italic bg-[rgba(26,15,34,0.6)] p-3 rounded-xl border border-[rgba(248,244,233,0.08)] font-medium leading-relaxed">
+                "{currentPrep.track === 'SDE'
+                  ? 'How would you design a thread-safe distributed in-memory cache with an LRU eviction policy?'
+                  : currentPrep.track === 'Frontend Engineer'
+                  ? 'Explain React Fiber reconciliation and how you troubleshoot unnecessary component re-renders.'
+                  : currentPrep.track === 'Full Stack Engineer'
+                  ? 'Trace an authenticated POST /api/checkout request from browser click to database commit.'
+                  : currentPrep.track === 'Data Scientist'
+                  ? 'Explain to an executive why 98% accuracy can be misleading in an imbalanced fraud detection model.'
+                  : currentPrep.track === 'Data Engineer'
+                  ? 'Architect a fault-tolerant batch ETL pipeline processing 50M records with schema evolution.'
+                  : currentPrep.track === 'DevOps & Cloud'
+                  ? 'A critical microservice is throwing 502 errors and CrashLoopBackOff across pods. Walk through your triage.'
+                  : currentPrep.track === 'Cybersecurity'
+                  ? 'Identify top attack vectors and remediation for GET /api/users/:id/invoices (BOLA / IDOR).'
+                  : currentPrep.track === 'Product Manager'
+                  ? 'Design a high-impact onboarding experience for an AI productivity app and state your North Star metric.'
+                  : currentPrep.track === 'QA & Automation'
+                  ? 'Formulate a test pyramid and flaky-test elimination strategy for a critical checkout flow.'
+                  : 'Deliver a 90-second STAR response for: Tell me about a time you adapted quickly to a major shift in priority.'}"
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[rgba(248,244,233,0.7)] block">
+                Step-by-Step Action Plan (5 Minutes):
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div className="p-2.5 rounded-xl bg-[rgba(26,15,34,0.5)] border border-[rgba(248,244,233,0.06)]">
+                  <strong className="text-[#F6DBC0] block mb-0.5">Minute 1: Clarify & Scope</strong>
+                  <span className="text-[rgba(248,244,233,0.75)]">Confirm requirements, input constraints, and declare your framework upfront.</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[rgba(26,15,34,0.5)] border border-[rgba(248,244,233,0.06)]">
+                  <strong className="text-[#F6DBC0] block mb-0.5">Minutes 2-3: Speak Your Solution Out Loud</strong>
+                  <span className="text-[rgba(248,244,233,0.75)]">Narrate your reasoning, data structures, and trade-offs continuously without long pauses.</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[rgba(26,15,34,0.5)] border border-[rgba(248,244,233,0.06)]">
+                  <strong className="text-[#F6DBC0] block mb-0.5">Minute 4: Address Edge Cases</strong>
+                  <span className="text-[rgba(248,244,233,0.75)]">Cover concurrency, failure modes, scale limitations, and mitigation tactics.</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-[rgba(26,15,34,0.5)] border border-[rgba(248,244,233,0.06)]">
+                  <strong className="text-[#7FE3B9] block mb-0.5">Minute 5: Launch Mock Practice</strong>
+                  <span className="text-[rgba(248,244,233,0.75)]">Take the prompt into the live AI voice room to get scored on speech cadence and technical depth.</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => navigate(`/track-selection?track=${encodeURIComponent(currentPrep.track)}`)}
+                className="px-4 py-2 bg-gradient-to-r from-[#502D55] via-[#935073] to-[#a65d83] hover:from-[#603766] hover:to-[#ba6d95] text-[#F8F4E9] border border-[rgba(246,219,192,0.3)] font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <span>Practice {currentPrep.track} Mock</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#F6DBC0]" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Interactive Quick Warmup Checklist - Stacked Line by Line */}
-      <div className="bg-slate-100/70 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
+      <div className="bg-[rgba(26,15,34,0.6)] border border-[rgba(248,244,233,0.08)] rounded-2xl p-4 sm:p-5 space-y-3">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <h4 className="text-xs font-extrabold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <h4 className="text-xs font-extrabold text-[#F8F4E9] uppercase tracking-wider flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
             Pre-Interview Confidence Checklist ({currentPrep.track})
           </h4>
-          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+          <span className="text-[11px] font-bold text-[rgba(248,244,233,0.6)]">
             {currentPrep.checklist.filter((item) => checkedItems[`${activeTrack}_${item}`]).length} / {currentPrep.checklist.length} Completed
           </span>
         </div>
@@ -808,15 +887,15 @@ export const PreparationTips: React.FC = () => {
                 onClick={() => toggleChecklist(itemKey)}
                 className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition text-xs font-medium select-none ${
                   isChecked
-                    ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-500/40 text-emerald-900 dark:text-emerald-200 line-through'
-                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-700'
+                    ? 'bg-[rgba(127,227,185,0.12)] border-[rgba(127,227,185,0.3)] text-[#7FE3B9] line-through'
+                    : 'bg-[rgba(42,27,51,0.8)] border-[rgba(248,244,233,0.08)] text-[#F8F4E9] hover:border-[rgba(147,80,115,0.4)]'
                 }`}
               >
                 <input
                   type="checkbox"
                   checked={isChecked}
                   onChange={() => {}} // handled by parent label onClick
-                  className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer shrink-0"
+                  className="w-4 h-4 rounded text-[#935073] focus:ring-[#935073] cursor-pointer shrink-0 accent-[#935073]"
                 />
                 <span className="leading-snug">{checkItem}</span>
               </label>
