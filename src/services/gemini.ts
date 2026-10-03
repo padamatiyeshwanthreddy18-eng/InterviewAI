@@ -55,7 +55,7 @@ export async function parseResumeWithGemini(
   try {
     const ai = getAI();
     const response = await ai.models.generateContent({
-      model: 'gemini-3.7-flash',
+      model: 'gemini-3.8-flash',
       contents: `You are an expert technical recruiter. Analyze the following resume content and extract key skills and a concise summary of work experience.\n\nRESUME CONTENT:\n${resumeContent}`,
       config: {
         responseMimeType: 'application/json',
@@ -103,7 +103,7 @@ export async function transcribeAudioWithGemini(
   try {
     const ai = getAI();
     const response = await ai.models.generateContent({
-      model: 'gemini-3.7-flash',
+      model: 'gemini-3.5-transcribe',
       contents: [
         {
           inlineData: {
@@ -167,7 +167,7 @@ Ensure the question is authentic, clear, challenging for the ${difficulty} level
 
     const response = await callGeminiWithRetry(() =>
       ai.models.generateContent({
-        model: 'gemini-3.7-flash',
+        model: 'gemini-3.8-flash',
         contents: prompt,
         config: {
           responseMimeType: 'application/json',
@@ -440,7 +440,7 @@ Evaluate this answer and provide:
 
     const response = await callGeminiWithRetry(() =>
       ai.models.generateContent({
-        model: 'gemini-3.7-flash',
+        model: 'gemini-3.8-flash',
         contents: prompt,
         config: {
           responseMimeType: 'application/json',
@@ -522,7 +522,7 @@ Analyze the candidate's performance across all questions and output:
     const response = await callGeminiWithRetry(
       () =>
         ai.models.generateContent({
-          model: 'gemini-3.7-flash',
+          model: 'gemini-3.8-flash',
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
@@ -618,7 +618,7 @@ Generate a personalized, high-value practice tip email content that includes:
 6. A gold-standard sample answer snippet or template demonstrating the technique.`;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.7-flash',
+      model: 'gemini-3.8-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',

@@ -28,6 +28,7 @@ import {
   Sparkles,
   PlayCircle,
   FileText,
+  AlertCircle,
 } from 'lucide-react';
 
 export const HistoryPage: React.FC = () => {

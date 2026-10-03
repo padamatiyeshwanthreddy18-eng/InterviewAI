@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { PreparationTips } from '../components/PreparationTips';
+import { TechText } from '../components/TechText';
+import { ROLE_TRACKS } from '../types';
 import {
   GlassCard,
   PrimaryButton,
@@ -159,10 +161,20 @@ export const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen text-[#F8F4E9] flex flex-col selection:bg-[#935073] selection:text-[#F8F4E9]">
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-12 pb-20 md:pt-20 md:pb-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[rgba(80,45,85,0.4)] border border-[rgba(246,219,192,0.3)] text-[#F6DBC0] text-xs font-bold mb-6 shadow-[0_0_20px_rgba(147,80,115,0.3)] backdrop-blur-md">
+      <section className="relative overflow-hidden pt-6 sm:pt-8 md:pt-10 pb-10 md:pb-14">
+        {/* Soft ambient radial glows */}
+        <div
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] max-w-[95vw] h-[300px] bg-[radial-gradient(ellipse_at_center,rgba(147,80,115,0.22)_0%,rgba(80,45,85,0.12)_45%,transparent_75%)] blur-3xl pointer-events-none -z-10"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[520px] max-w-[85vw] h-[160px] bg-[radial-gradient(ellipse_at_center,rgba(246,219,192,0.07)_0%,transparent_70%)] blur-3xl pointer-events-none -z-10"
+          aria-hidden="true"
+        />
+
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 relative z-10 text-center flex flex-col items-center">
+          {/* Top Eyebrow Badge Pill */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[rgba(80,45,85,0.4)] border border-[rgba(246,219,192,0.3)] text-[#F6DBC0] text-xs font-bold mb-2 shadow-[0_0_20px_rgba(147,80,115,0.3)] backdrop-blur-md select-none animate-hero-fade-1">
             <span className="flex h-2 w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#F6DBC0] opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#F6DBC0]" />
@@ -173,28 +185,77 @@ export const LandingPage: React.FC = () => {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] max-w-4xl mx-auto text-[#F8F4E9]">
-            Master Tech & FAANG Interviews with{' '}
-            <span className="bg-gradient-to-r from-[#F8F4E9] via-[#F6DBC0] to-[#935073] bg-clip-text text-transparent">
-              Real-Time AI Voice Coaching
-            </span>
+          {/* Wordmark rendered via React Bits TechText */}
+          <h1 className="relative w-full my-0 py-0">
+            <span className="sr-only">Interview AI</span>
+            <div
+              style={{
+                width: '100%',
+                maxWidth: 1100,
+                height: 'clamp(200px, 32vh, 320px)',
+                position: 'relative',
+                margin: '0 auto',
+                fontFamily: 'var(--font-sans), "Plus Jakarta Sans", sans-serif',
+              }}
+            >
+              <TechText
+                text="Interview AI"
+                fontWeight={700}
+                fontSize={170}
+                letterSpacing={-0.05}
+                color="#F8F4E9"
+                accentColor="#935073"
+                reveal="letter"
+                reach={220}
+                softness={0.7}
+                dashLength={4}
+                dashGap={2}
+                lineStyle="dashed"
+                strokeWidth={1.5}
+                specks={15}
+                selection
+                labels
+                draggable
+                sweep
+                speed={1}
+              />
+            </div>
           </h1>
 
-          <p className="mt-6 text-base sm:text-xl text-[rgba(248,244,233,0.7)] max-w-3xl mx-auto leading-relaxed font-medium">
-            Practice realistic mock interviews tailored to your exact role, target company, and uploaded resume. Get instant speech transcription critiques, live follow-up grilling, and personalized study roadmaps.
+          {/* Interaction Hint (hidden on touch devices) */}
+          <p className="hidden sm:inline-flex items-center justify-center gap-1.5 text-[11px] font-mono text-[rgba(248,244,233,0.42)] select-none pointer-events-none -mt-1 mb-3 tracking-wide">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#935073] animate-pulse" />
+            <span>Hover or drag the letters</span>
           </p>
 
+          {/* Two Taglines */}
+          <div className="space-y-1.5 max-w-2xl mx-auto px-4 animate-hero-fade-2">
+            <p className="text-[clamp(1.4rem,2.3vw,1.95rem)] font-medium text-[#F8F4E9] tracking-tight leading-snug">
+              Speak it. Get grilled.{' '}
+              <span className="bg-gradient-to-r from-[#935073] via-[#b6688f] to-[#F6DBC0] bg-clip-text text-transparent font-semibold">
+                Get hired.
+              </span>
+            </p>
+            <p className="text-[clamp(0.95rem,1.15vw,1.125rem)] text-[rgba(248,244,233,0.65)] font-normal leading-normal">
+              Real-time AI voice coaching for Tech &amp; FAANG interviews.
+            </p>
+          </div>
+
           {/* CTA Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-3.5 animate-hero-fade-3">
             <PrimaryButton
               onClick={() => (user ? window.location.assign('/track-selection') : window.location.assign('/register'))}
               size="lg"
               icon={<Sparkles className="w-5 h-5 text-[#F6DBC0]" />}
+              className="shadow-[0_0_24px_rgba(147,80,115,0.45)] hover:shadow-[0_0_36px_rgba(147,80,115,0.65)]"
             >
               {user ? 'Enter Interview Room' : 'Start Free Mock Interview'}
             </PrimaryButton>
 
-            <a href="#interactive-demo">
+            <a
+              href="#interactive-demo"
+              className="focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F6DBC0] rounded-full"
+            >
               <PillButton
                 size="lg"
                 icon={<Bot className="w-5 h-5 text-[#F6DBC0]" />}
@@ -204,23 +265,69 @@ export const LandingPage: React.FC = () => {
             </a>
           </div>
 
-          {/* Trust badges */}
-          <div className="mt-12 flex items-center justify-center gap-6 sm:gap-8 text-[rgba(248,244,233,0.65)] text-xs sm:text-sm font-semibold flex-wrap">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
-              <span>10 Role Tracks (SDE, System Design, AI)</span>
+          {/* Four Feature Chips */}
+          <div className="mt-7 grid grid-cols-2 lg:grid-cols-4 gap-2.5 w-full max-w-4xl text-left animate-hero-fade-4">
+            {[
+              `${ROLE_TRACKS.length} Role Tracks (SDE, System Design, AI)`,
+              'Low-Latency Voice Speech Recognition',
+              'AI Resume & JD Skill Matcher',
+              'Exportable Scorecards & PDF Reports',
+            ].map((feature, idx) => (
+              <div
+                key={idx}
+                className="glass-card px-3.5 py-2.5 rounded-xl border border-[rgba(248,244,233,0.08)] bg-[rgba(42,27,51,0.58)] flex items-center gap-2.5 shadow-xs hover:border-[rgba(147,80,115,0.4)] transition-all"
+              >
+                <CheckCircle2 className="w-4 h-4 text-[#7FE3B9] shrink-0" />
+                <span className="text-[11px] sm:text-xs font-semibold text-[rgba(248,244,233,0.88)] leading-tight">
+                  {feature}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Slim "How It Works" Strip */}
+          <div className="mt-8 pt-5 border-t border-[rgba(248,244,233,0.06)] w-full max-w-4xl">
+            <div className="text-center mb-3">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#F6DBC0]/80">
+                How It Works
+              </span>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
-              <span>Low-Latency Voice Speech Recognition</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
-              <span>AI Resume & JD Skill Matcher</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#7FE3B9]" />
-              <span>Exportable Scorecards & PDF Reports</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+              <div className="glass-panel p-3 rounded-xl border border-[rgba(248,244,233,0.06)] bg-[rgba(35,21,48,0.5)] flex items-start gap-3 hover:border-[rgba(147,80,115,0.3)] transition-colors">
+                <div className="w-6 h-6 rounded-lg bg-[rgba(80,45,85,0.65)] border border-[rgba(147,80,115,0.4)] flex items-center justify-center text-[#F6DBC0] shrink-0 text-xs font-bold font-mono">
+                  1
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-[#F8F4E9]">Pick Track &amp; Company</h4>
+                  <p className="text-[11px] text-[rgba(248,244,233,0.6)] mt-0.5 leading-snug">
+                    Choose from {ROLE_TRACKS.length} roles, set difficulty, and select company presets.
+                  </p>
+                </div>
+              </div>
+
+              <div className="glass-panel p-3 rounded-xl border border-[rgba(248,244,233,0.06)] bg-[rgba(35,21,48,0.5)] flex items-start gap-3 hover:border-[rgba(147,80,115,0.3)] transition-colors">
+                <div className="w-6 h-6 rounded-lg bg-[rgba(80,45,85,0.65)] border border-[rgba(147,80,115,0.4)] flex items-center justify-center text-[#F6DBC0] shrink-0 text-xs font-bold font-mono">
+                  2
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-[#F8F4E9]">Speak with AI Live</h4>
+                  <p className="text-[11px] text-[rgba(248,244,233,0.6)] mt-0.5 leading-snug">
+                    Answer questions verbally. The AI transcribes and asks dynamic follow-ups.
+                  </p>
+                </div>
+              </div>
+
+              <div className="glass-panel p-3 rounded-xl border border-[rgba(248,244,233,0.06)] bg-[rgba(35,21,48,0.5)] flex items-start gap-3 hover:border-[rgba(147,80,115,0.3)] transition-colors">
+                <div className="w-6 h-6 rounded-lg bg-[rgba(80,45,85,0.65)] border border-[rgba(147,80,115,0.4)] flex items-center justify-center text-[#F6DBC0] shrink-0 text-xs font-bold font-mono">
+                  3
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-[#F8F4E9]">Scorecard &amp; Roadmap</h4>
+                  <p className="text-[11px] text-[rgba(248,244,233,0.6)] mt-0.5 leading-snug">
+                    Get technical &amp; speech metrics, model answers, and an exportable report.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
