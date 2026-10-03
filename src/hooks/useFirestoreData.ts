@@ -197,6 +197,19 @@ export function useSession(sessionId: string | undefined, userId?: string) {
  * 3. useProfile(userId) hook
  * Subscribes to real-time user profile, preferences, and weekly tip settings
  */
+const DEFAULT_PROFILE_PREFERENCES: UserPreferences = {
+  defaultRoleTrack: 'SDE',
+  defaultDifficulty: 'Intermediate',
+  defaultCompanyPreset: 'General Tech',
+  cameraEnabled: true,
+};
+
+const DEFAULT_WEEKLY_TIP: WeeklyTipSettings = {
+  subscribed: true,
+  frequency: 'weekly',
+  lastSentAt: null,
+};
+
 export function useProfile(userId?: string) {
   const [profile, setProfile] = useState<UserProfileDoc | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -254,17 +267,8 @@ export function useProfile(userId?: string) {
 
   return {
     profile,
-    preferences: profile?.preferences || {
-      defaultRoleTrack: 'SDE',
-      defaultDifficulty: 'Intermediate',
-      defaultCompanyPreset: 'General Tech',
-      cameraEnabled: true,
-    },
-    weeklyTip: profile?.weeklyTip || {
-      subscribed: true,
-      frequency: 'weekly',
-      lastSentAt: null,
-    },
+    preferences: profile?.preferences || DEFAULT_PROFILE_PREFERENCES,
+    weeklyTip: profile?.weeklyTip || DEFAULT_WEEKLY_TIP,
     loading,
     error,
     updatePreferences,

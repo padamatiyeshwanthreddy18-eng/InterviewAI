@@ -191,20 +191,14 @@ export const Navbar: React.FC = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <Link
-                  to="/login"
-                  className="px-3.5 py-1.5 text-xs text-[rgba(248,244,233,0.8)] hover:text-[#F8F4E9] font-bold transition-colors"
-                >
-                  Log In
-                </Link>
-                <Link
-                  to="/register"
+                  to="/track-selection"
                   className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold text-[#F8F4E9] border border-[rgba(246,219,192,0.3)] shadow-[0_0_20px_rgba(147,80,115,0.4)] transition-all hover:scale-102"
                   style={{
                     background: 'linear-gradient(135deg, #502D55 0%, #935073 60%, #a65d83 100%)',
                   }}
                 >
                   <Sparkles className="w-3.5 h-3.5 text-[#F6DBC0]" />
-                  <span>Get Started</span>
+                  <span>⚡ Start Interview</span>
                 </Link>
               </div>
             )}
@@ -316,21 +310,14 @@ export const Navbar: React.FC = () => {
                 Explore Interview Tracks
               </Link>
               <Link
-                to="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full text-center py-2.5 rounded-xl text-sm font-bold border border-[rgba(248,244,233,0.1)] hover:bg-[rgba(147,80,115,0.2)]"
-              >
-                Log In
-              </Link>
-              <Link
-                to="/register"
+                to="/track-selection"
                 onClick={() => setMobileMenuOpen(false)}
                 className="block w-full text-center py-2.5 rounded-xl text-sm font-bold text-[#F8F4E9]"
                 style={{
                   background: 'linear-gradient(135deg, #502D55 0%, #935073 60%, #a65d83 100%)',
                 }}
               >
-                Get Started Free
+                ⚡ Start Free Interview
               </Link>
             </div>
           )}

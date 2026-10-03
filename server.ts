@@ -5,7 +5,8 @@ import bcrypt from 'bcryptjs';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 
-import { store } from './src/db/store.js';
+import path from 'path';
+import { store } from './src/db/store.ts';
 import {
   parseResumeWithGemini,
   transcribeAudioWithGemini,
@@ -13,8 +14,8 @@ import {
   evaluateAnswerWithGemini,
   generateFinalResultsAndPlanWithGemini,
   generateWeeklyPracticeTipWithGemini,
-} from './src/services/gemini.js';
-import { TrackType, DifficultyType } from './src/types.js';
+} from './src/services/gemini.ts';
+import { TrackType, DifficultyType } from './src/types.ts';
 
 // Environment & Startup Security Checks
 if (!process.env.GEMINI_API_KEY) {
@@ -51,6 +52,9 @@ function validatePassword(password: unknown): string | null {
 
 export const app = express();
 
+// Enable trust proxy for Google Cloud Run / reverse proxies
+app.set('trust proxy', 1);
+
 // Security Headers via Helmet (protection against XSS, clickjacking, MIME sniffing)
 app.use(
   helmet({
@@ -72,6 +76,11 @@ const generalApiLimiter = rateLimit({
   message: { error: 'Too many requests from this IP. Please try again later.' },
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+    default: false,
+  },
 });
 app.use('/api', generalApiLimiter);
 
@@ -82,6 +91,11 @@ const authLimiter = rateLimit({
   message: { error: 'Too many authentication attempts. Please try again after 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+    default: false,
+  },
 });
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/signup', authLimiter);
@@ -94,6 +108,11 @@ const aiLimiter = rateLimit({
   message: { error: 'AI request rate limit reached. Please wait a few moments before continuing.' },
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+    default: false,
+  },
 });
 app.use('/api/sessions/start', aiLimiter);
 app.use('/api/sessions/:id/submit-answer', aiLimiter);
@@ -977,3 +996,33 @@ app.post('/api/notifications/test-email', authenticateToken, async (req: AuthReq
     res.status(500).json({ error: 'Failed to send test email' });
   }
 });
+
+// Full-Stack Server Lifecycle
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const HOST = process.env.HOST || '0.0.0.0';
+
+async function startServer() {
+  if (process.env.NODE_ENV === 'production') {
+    const distPath = path.join(process.cwd(), 'dist');
+    app.use(express.static(distPath));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  } else {
+    const { createServer: createViteServer } = await import('vite');
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: 'spa',
+    });
+    app.use(vite.middlewares);
+  }
+
+  app.listen(PORT, HOST, () => {
+    console.log(`\n  🚀 InterviewAI is running! Access it in your browser at:\n`);
+    console.log(`  👉 Localhost:  http://localhost:${PORT}`);
+    console.log(`  👉 Network IP: http://127.0.0.1:${PORT}\n`);
+  });
+}
+
+startServer();
+

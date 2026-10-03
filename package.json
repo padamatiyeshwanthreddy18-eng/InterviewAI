@@ -4,10 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/start.ts",
-    "build": "vite build && esbuild src/start.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
-    "start": "node dist/server.cjs",
-    "clean": "rm -rf dist server.js",
+    "dev": "tsx server.ts",
+    "build": "vite build",
+    "start": "node server.ts",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
@@ -31,7 +30,7 @@
     "react-dom": "^19.0.1",
     "react-router-dom": "^7.18.2",
     "recharts": "^3.10.1",
-    "serverless-http": "^4.0.0",
+    "tsx": "^4.21.0",
     "vite": "^6.2.3"
   },
   "devDependencies": {
@@ -40,8 +39,6 @@
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
     "tailwindcss": "^4.1.14",
-    "tsx": "^4.21.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.3"
+    "typescript": "~5.8.2"
   }
 }

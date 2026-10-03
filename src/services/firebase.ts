@@ -267,6 +267,8 @@ export function getFriendlyAuthErrorMessage(error: any): string {
       return 'Previous sign-in request cancelled. Please try again.';
     case 'auth/requires-recent-login':
       return 'This action requires recent authentication. Please sign out and sign in again before proceeding.';
+    case 'auth/unauthorized-domain':
+      return `Preview domain unauthorized in Firebase Auth (${typeof window !== 'undefined' ? window.location.hostname : 'current domain'}). Click Instant 1-Click Access below or use Email/Password. To enable Google OAuth, add this domain in Firebase Console > Authentication > Settings > Authorized domains.`;
     default:
       if (message.includes('API key')) {
         return 'Firebase Authentication is initializing. If using custom credentials, please verify your environment configuration.';

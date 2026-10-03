@@ -244,12 +244,12 @@ export const LandingPage: React.FC = () => {
           {/* CTA Buttons */}
           <div className="mt-5 flex flex-col sm:flex-row items-center justify-center gap-3.5 animate-hero-fade-3">
             <PrimaryButton
-              onClick={() => (user ? window.location.assign('/track-selection') : window.location.assign('/register'))}
+              onClick={() => window.location.assign('/login')}
               size="lg"
               icon={<Sparkles className="w-5 h-5 text-[#F6DBC0]" />}
               className="shadow-[0_0_24px_rgba(147,80,115,0.45)] hover:shadow-[0_0_36px_rgba(147,80,115,0.65)]"
             >
-              {user ? 'Enter Interview Room' : 'Start Free Mock Interview'}
+              Start AI Mock Interview
             </PrimaryButton>
 
             <a
@@ -575,7 +575,7 @@ export const LandingPage: React.FC = () => {
               </div>
 
               <PrimaryButton
-                onClick={() => (user ? window.location.assign('/track-selection') : window.location.assign('/register'))}
+                onClick={() => window.location.assign('/login')}
                 fullWidth
                 size="md"
                 icon={<Sparkles className="w-4 h-4 text-[#F6DBC0]" />}
@@ -776,11 +776,11 @@ export const LandingPage: React.FC = () => {
           </p>
           <div className="pt-2">
             <PrimaryButton
-              onClick={() => (user ? window.location.assign('/track-selection') : window.location.assign('/register'))}
+              onClick={() => window.location.assign('/login')}
               size="lg"
               icon={<Sparkles className="w-5 h-5 text-[#F6DBC0]" />}
             >
-              {user ? 'Enter Interview Room' : 'Start Free Practice Round'}
+              Start Free Practice Round
             </PrimaryButton>
           </div>
         </div>

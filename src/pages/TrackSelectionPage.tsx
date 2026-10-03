@@ -56,10 +56,17 @@ export const TrackSelectionPage: React.FC = () => {
   });
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
 
-  // Sync saved user preferences if available
+  // Sync saved user preferences ONCE on initial mount if available
+  const hasInitializedPrefsRef = useRef(false);
+
   useEffect(() => {
-    if (preferences) {
-      if (preferences.defaultRoleTrack && !location.search && !(location.state as any)?.selectedTrack) {
+    if (preferences && !hasInitializedPrefsRef.current) {
+      hasInitializedPrefsRef.current = true;
+      const searchParams = new URLSearchParams(location.search);
+      const trackParam = searchParams.get('track');
+      const navTrack = (location.state as any)?.selectedTrack;
+
+      if (!trackParam && !navTrack && preferences.defaultRoleTrack) {
         setSelectedTrack(preferences.defaultRoleTrack as TrackType);
       }
       if (preferences.defaultDifficulty) {
@@ -96,7 +103,7 @@ export const TrackSelectionPage: React.FC = () => {
     } else if (location.state && (location.state as { selectedTrack?: TrackType }).selectedTrack) {
       setSelectedTrack((location.state as { selectedTrack: TrackType }).selectedTrack);
     }
-  }, [location]);
+  }, [location.search, location.state]);
 
   // Resume state
   const [currentResume, setCurrentResume] = useState<Resume | null>(null);
@@ -413,16 +420,17 @@ export const TrackSelectionPage: React.FC = () => {
               const isSelected = selectedTrack === t.id;
 
               return (
-                <div
+                <button
+                  type="button"
                   key={t.id}
                   onClick={() => setSelectedTrack(t.id)}
-                  className={`p-5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between ${
+                  className={`p-5 rounded-2xl border transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between text-left w-full focus:outline-none ${
                     isSelected
-                      ? 'bg-[rgba(54,34,66,0.9)] border-[rgba(246,219,192,0.45)] shadow-[0_0_24px_rgba(147,80,115,0.4)]'
-                      : 'bg-[rgba(42,27,51,0.65)] border-[rgba(248,244,233,0.06)] hover:bg-[rgba(54,34,66,0.7)] hover:border-[rgba(147,80,115,0.3)]'
+                      ? 'bg-[rgba(54,34,66,0.95)] border-[#F6DBC0] shadow-[0_0_24px_rgba(147,80,115,0.45)] ring-2 ring-[#935073]'
+                      : 'bg-[rgba(42,27,51,0.65)] border-[rgba(248,244,233,0.06)] hover:bg-[rgba(54,34,66,0.7)] hover:border-[rgba(147,80,115,0.35)]'
                   }`}
                 >
-                  <div className="space-y-3">
+                  <div className="space-y-3 w-full">
                     <div className="flex items-center justify-between">
                       <div className="w-10 h-10 rounded-xl bg-[rgba(80,45,85,0.7)] border border-[rgba(147,80,115,0.4)] flex items-center justify-center shadow-sm">
                         {t.icon}
@@ -444,7 +452,7 @@ export const TrackSelectionPage: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -470,12 +478,15 @@ export const TrackSelectionPage: React.FC = () => {
                     onClick={() => setSelectedDifficulty(d.id)}
                     className={`p-3.5 rounded-2xl border text-center transition-all cursor-pointer flex flex-col items-center justify-between ${
                       isSelected
-                        ? 'bg-[#935073] text-[#F8F4E9] border-[rgba(246,219,192,0.4)] shadow-[0_0_18px_rgba(147,80,115,0.4)]'
-                        : 'bg-[rgba(26,15,34,0.6)] border-[rgba(248,244,233,0.06)] text-[rgba(248,244,233,0.7)] hover:border-[rgba(147,80,115,0.3)]'
+                        ? 'bg-[#935073] text-[#F8F4E9] border-[#F6DBC0] shadow-[0_0_18px_rgba(147,80,115,0.5)] ring-2 ring-[#F6DBC0]/50 scale-[1.02]'
+                        : 'bg-[rgba(26,15,34,0.6)] border-[rgba(248,244,233,0.06)] text-[rgba(248,244,233,0.7)] hover:border-[rgba(147,80,115,0.3)] hover:bg-[rgba(54,34,66,0.5)]'
                     }`}
                   >
-                    <span className="text-xs font-bold block">{d.label}</span>
-                    <span className="text-[10px] text-[rgba(248,244,233,0.6)] mt-1 font-mono leading-tight">
+                    <div className="flex items-center gap-1.5 justify-center">
+                      <span className="text-xs font-bold block">{d.label}</span>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-[#F6DBC0]" />}
+                    </div>
+                    <span className="text-[10px] text-[rgba(248,244,233,0.7)] mt-1 font-mono leading-tight">
                       {d.desc}
                     </span>
                   </button>
@@ -502,11 +513,14 @@ export const TrackSelectionPage: React.FC = () => {
                     onClick={() => setSelectedCompany(c.id)}
                     className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-[#935073] text-[#F8F4E9] border-[rgba(246,219,192,0.4)] shadow-[0_0_15px_rgba(147,80,115,0.4)]'
-                        : 'bg-[rgba(26,15,34,0.6)] border-[rgba(248,244,233,0.06)] text-[rgba(248,244,233,0.7)] hover:border-[rgba(147,80,115,0.3)]'
+                        ? 'bg-[#935073] text-[#F8F4E9] border-[#F6DBC0] shadow-[0_0_15px_rgba(147,80,115,0.5)] ring-2 ring-[#F6DBC0]/50 scale-[1.02]'
+                        : 'bg-[rgba(26,15,34,0.6)] border-[rgba(248,244,233,0.06)] text-[rgba(248,244,233,0.7)] hover:border-[rgba(147,80,115,0.3)] hover:bg-[rgba(54,34,66,0.5)]'
                     }`}
                   >
-                    <span className="text-xs font-bold block truncate">{c.name}</span>
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="text-xs font-bold block truncate">{c.name}</span>
+                      {isSelected && <Check className="w-3 h-3 text-[#F6DBC0] shrink-0" />}
+                    </div>
                     <span className="text-[9px] text-[#F6DBC0] mt-0.5 block truncate font-mono">
                       {c.badge}
                     </span>
@@ -599,8 +613,8 @@ export const TrackSelectionPage: React.FC = () => {
                   onClick={() => setQuestionCount(count)}
                   className={`w-9 h-9 rounded-xl font-bold font-dot text-sm transition-all cursor-pointer ${
                     questionCount === count
-                      ? 'bg-[#935073] text-[#F8F4E9] border border-[rgba(246,219,192,0.4)] shadow-[0_0_12px_rgba(147,80,115,0.5)]'
-                      : 'bg-[rgba(26,15,34,0.6)] text-[rgba(248,244,233,0.6)] border border-[rgba(248,244,233,0.06)]'
+                      ? 'bg-[#935073] text-[#F8F4E9] border border-[#F6DBC0] shadow-[0_0_12px_rgba(147,80,115,0.5)] ring-2 ring-[#F6DBC0]/50 scale-105'
+                      : 'bg-[rgba(26,15,34,0.6)] text-[rgba(248,244,233,0.6)] border border-[rgba(248,244,233,0.06)] hover:border-[rgba(147,80,115,0.3)] hover:text-[#F8F4E9]'
                   }`}
                 >
                   {count}

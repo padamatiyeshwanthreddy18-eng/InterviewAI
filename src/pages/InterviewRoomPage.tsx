@@ -93,6 +93,21 @@ export const InterviewRoomPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Live Interviewer Feedback Stage
+  const [liveFeedback, setLiveFeedback] = useState<{
+    technicalScore: number;
+    communicationScore: number;
+    sentimentScore: number;
+    critique: string;
+    questionAnsweredText: string;
+    isFollowup?: boolean;
+    followupReason?: string;
+  } | null>(null);
+  const [isInFeedbackStage, setIsInFeedbackStage] = useState(false);
+  const [pendingNextQuestion, setPendingNextQuestion] = useState<InterviewQuestion | null>(null);
+  const [pendingSession, setPendingSession] = useState<InterviewSession | null>(null);
+  const [isRoundFinished, setIsRoundFinished] = useState(false);
+
   const sessionStartTimeRef = useRef<number>(Date.now());
   const hasInitializedFirestoreRef = useRef<boolean>(false);
 
@@ -232,6 +247,72 @@ export const InterviewRoomPage: React.FC = () => {
       stopTTS();
     } else if (activeQuestion) {
       speakQuestion(activeQuestion.questionText);
+    }
+  };
+
+  // Speak Interviewer Live Feedback Aloud
+  const speakLiveFeedback = (critique: string, isFinished: boolean) => {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+
+    const spokenIntro = `Here is my feedback on your answer. ${critique}. ${
+      isFinished
+        ? 'That completes our interview round. Let us review your complete results.'
+        : 'Whenever you are ready, click proceed to move to the next question.'
+    }`;
+
+    const utterance = new SpeechSynthesisUtterance(spokenIntro);
+    utterance.rate = ttsRate;
+    utterance.pitch = ttsPitch;
+
+    const voices = window.speechSynthesis.getVoices();
+    if (voices.length > 0) {
+      let targetVoice = null;
+      if (selectedVoiceProfile.gender === 'female') {
+        targetVoice = voices.find((v) =>
+          /female|woman|samantha|zira|karen|victoria|moira|fiona/i.test(v.name)
+        );
+      } else {
+        targetVoice = voices.find((v) =>
+          /male|man|david|alex|daniel|george|fred/i.test(v.name)
+        );
+      }
+      utterance.voice = targetVoice || voices.find((v) => v.lang.startsWith('en')) || voices[0];
+    }
+
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  // Advance from Feedback Stage to Next Question or Results
+  const handleProceedToNext = () => {
+    stopTTS();
+    if (isRoundFinished) {
+      navigate(`/results/${id}`);
+      return;
+    }
+
+    if (pendingSession) {
+      setSession(pendingSession);
+    }
+    if (pendingNextQuestion) {
+      setCurrentQuestion(pendingNextQuestion);
+    }
+
+    setLiveFeedback(null);
+    setIsInFeedbackStage(false);
+    setRecordedAudioBase64(null);
+    setAudioBlobUrl(null);
+    setTextAnswer('');
+    setTimeLeft(120);
+
+    if (pendingNextQuestion?.questionText && autoReadQuestion) {
+      setTimeout(() => {
+        speakQuestion(pendingNextQuestion.questionText);
+      }, 350);
     }
   };
 
@@ -455,14 +536,36 @@ export const InterviewRoomPage: React.FC = () => {
         }
       }
 
-      if (data.isFinished || data.isSessionCompleted) {
-        navigate(`/results/${id}`);
+      // Enter Live Feedback Stage so the candidate gets instant spoken critique and scores
+      if (data.evaluation) {
+        setLiveFeedback({
+          technicalScore: data.evaluation.technicalScore ?? 80,
+          communicationScore: data.evaluation.communicationScore ?? 80,
+          sentimentScore: data.evaluation.sentimentScore ?? 85,
+          critique: data.evaluation.aiFeedback || 'Good effort addressing the key prompt parameters.',
+          questionAnsweredText: activeQuestion.questionText,
+          isFollowup: Boolean(data.nextQuestion?.isFollowup),
+          followupReason: data.evaluation.followupReason,
+        });
+        setPendingNextQuestion(data.nextQuestion || null);
+        setPendingSession(data.session || null);
+        setIsRoundFinished(Boolean(data.isFinished || data.isSessionCompleted));
+        setIsInFeedbackStage(true);
+
+        speakLiveFeedback(
+          data.evaluation.aiFeedback || 'Good effort addressing the prompt.',
+          Boolean(data.isFinished || data.isSessionCompleted)
+        );
       } else {
-        setSession(data.session);
-        setCurrentQuestion(data.nextQuestion);
-        setRecordedAudioBase64(null);
-        setAudioBlobUrl(null);
-        setTextAnswer('');
+        if (data.isFinished || data.isSessionCompleted) {
+          navigate(`/results/${id}`);
+        } else {
+          setSession(data.session);
+          setCurrentQuestion(data.nextQuestion);
+          setRecordedAudioBase64(null);
+          setAudioBlobUrl(null);
+          setTextAnswer('');
+        }
       }
     } catch (err: any) {
       console.error('Error submitting answer:', err);
@@ -734,137 +837,231 @@ export const InterviewRoomPage: React.FC = () => {
           </GlassCard>
 
           {/* GLASS SIDE PANEL: QUESTION & LIVE TRANSCRIPT (5 Cols) */}
+          {/* GLASS SIDE PANEL: QUESTION & LIVE TRANSCRIPT (5 Cols) */}
           <GlassCard className="lg:col-span-5 flex flex-col justify-between p-6 sm:p-7 space-y-5">
-            {/* Question Header */}
-            <div>
-              <div className="flex items-center justify-between pb-3 border-b border-[rgba(248,244,233,0.06)] mb-4">
-                <div className="flex items-center gap-2">
-                  <BrainCircuit className="w-4 h-4 text-[#F6DBC0]" />
-                  <span className="text-xs font-bold uppercase tracking-wider text-[rgba(248,244,233,0.7)]">
-                    {displayedQuestion.questionType.replace('_', ' ')}
-                  </span>
-                </div>
+            {isInFeedbackStage && liveFeedback ? (
+              /* LIVE INTERVIEWER FEEDBACK HUB */
+              <div className="space-y-4 animate-in fade-in duration-300">
+                <div className="flex items-center justify-between pb-3 border-b border-[rgba(248,244,233,0.06)]">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#F6DBC0]" />
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#F6DBC0]">
+                      Interviewer Live Critique
+                    </span>
+                  </div>
 
-                <button
-                  onClick={toggleTTS}
-                  className="flex items-center gap-1 text-xs font-bold text-[#F6DBC0] hover:text-[#F8F4E9] transition-colors cursor-pointer"
-                >
-                  {isSpeaking ? <VolumeX className="w-4 h-4 text-[#F6DBC0]" /> : <Volume2 className="w-4 h-4 text-[#F6DBC0]" />}
-                  <span>{isSpeaking ? 'Stop Audio' : 'Read Aloud'}</span>
-                </button>
-              </div>
-
-              <h2 className="text-lg sm:text-xl font-bold text-[#F8F4E9] leading-snug">
-                "{displayedQuestion.questionText}"
-              </h2>
-
-              {displayedQuestion.isFollowup && (
-                <div className="mt-2.5">
-                  <Badge variant="peach" size="sm">
-                    Adaptive Follow-Up Question
-                  </Badge>
-                </div>
-              )}
-            </div>
-
-            {/* Answer Mode Switcher */}
-            <div className="flex items-center justify-between pt-2 border-t border-[rgba(248,244,233,0.06)]">
-              <span className="text-xs font-bold text-[rgba(248,244,233,0.7)] uppercase tracking-wider">
-                Response Mode
-              </span>
-
-              <div className="flex items-center gap-1 bg-[rgba(26,15,34,0.7)] border border-[rgba(248,244,233,0.08)] p-1 rounded-full text-xs">
-                <button
-                  type="button"
-                  onClick={() => setInputMode('mic')}
-                  className={`px-3 py-1 rounded-full font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                    inputMode === 'mic'
-                      ? 'bg-[#935073] text-[#F8F4E9] shadow-sm'
-                      : 'text-[rgba(248,244,233,0.6)] hover:text-[#F8F4E9]'
-                  }`}
-                >
-                  <Mic className="w-3.5 h-3.5" />
-                  <span>Voice</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setInputMode('text')}
-                  className={`px-3 py-1 rounded-full font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-                    inputMode === 'text'
-                      ? 'bg-[#935073] text-[#F8F4E9] shadow-sm'
-                      : 'text-[rgba(248,244,233,0.6)] hover:text-[#F8F4E9]'
-                  }`}
-                >
-                  <Keyboard className="w-3.5 h-3.5" />
-                  <span>Text</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Recorded Audio Audio Player if captured */}
-            {audioBlobUrl && !isRecording && (
-              <div className="p-3 rounded-2xl bg-[rgba(26,15,34,0.6)] border border-[rgba(147,80,115,0.3)] space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold text-[#7FE3B9]">
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4" />
-                    Voice response ready for AI evaluation
-                  </span>
                   <button
-                    onClick={() => {
-                      setAudioBlobUrl(null);
-                      setRecordedAudioBase64(null);
-                    }}
-                    className="text-[11px] text-[rgba(248,244,233,0.5)] hover:text-[#E57373] flex items-center gap-1 cursor-pointer"
+                    type="button"
+                    onClick={() => speakLiveFeedback(liveFeedback.critique, isRoundFinished)}
+                    className="flex items-center gap-1.5 text-xs font-bold text-[#F6DBC0] hover:text-[#F8F4E9] bg-[rgba(147,80,115,0.25)] px-2.5 py-1 rounded-full border border-[rgba(147,80,115,0.3)] transition-all cursor-pointer"
                   >
-                    <RotateCcw className="w-3 h-3" />
-                    Re-record
+                    <Volume2 className="w-3.5 h-3.5" />
+                    <span>{isSpeaking ? 'Speaking...' : 'Replay Voice'}</span>
                   </button>
                 </div>
-                <audio controls src={audioBlobUrl} className="w-full h-8" />
-              </div>
-            )}
 
-            {/* Text Input area (always available or in text mode) */}
-            <div className="space-y-1.5 flex-1">
-              <label className="block text-xs font-bold text-[rgba(248,244,233,0.6)]">
-                {inputMode === 'text' ? 'Written Solution / Code Architecture:' : 'Optional Text or Notes:'}
-              </label>
-              <textarea
-                value={textAnswer}
-                onChange={(e) => setTextAnswer(e.target.value)}
-                placeholder="Elaborate on your approach, edge cases, trade-offs, or pseudocode..."
-                rows={4}
-                className="w-full bg-[rgba(26,15,34,0.7)] border border-[rgba(248,244,233,0.08)] rounded-2xl p-3.5 text-xs text-[#F8F4E9] placeholder-[rgba(248,244,233,0.35)] outline-none focus:border-[#935073] focus:shadow-[0_0_15px_rgba(147,80,115,0.3)] font-mono resize-none transition"
-              />
-            </div>
+                {/* Question recap */}
+                <div className="p-3 rounded-xl bg-[rgba(26,15,34,0.5)] border border-[rgba(248,244,233,0.06)]">
+                  <span className="text-[10px] font-bold uppercase text-[rgba(248,244,233,0.45)] block mb-0.5">
+                    Answered Question:
+                  </span>
+                  <p className="text-xs font-medium text-[rgba(248,244,233,0.85)] line-clamp-2">
+                    "{liveFeedback.questionAnsweredText}"
+                  </p>
+                </div>
+
+                {/* Score Breakdown Cards */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="p-2.5 rounded-xl bg-[rgba(80,45,85,0.4)] border border-[rgba(147,80,115,0.3)] text-center">
+                    <span className="text-[10px] font-bold text-[rgba(248,244,233,0.6)] uppercase block">Technical</span>
+                    <span className="text-lg font-black font-dot text-[#F6DBC0]">{liveFeedback.technicalScore}%</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[rgba(80,45,85,0.4)] border border-[rgba(147,80,115,0.3)] text-center">
+                    <span className="text-[10px] font-bold text-[rgba(248,244,233,0.6)] uppercase block">Comms</span>
+                    <span className="text-lg font-black font-dot text-[#7FE3B9]">{liveFeedback.communicationScore}%</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-[rgba(80,45,85,0.4)] border border-[rgba(147,80,115,0.3)] text-center">
+                    <span className="text-[10px] font-bold text-[rgba(248,244,233,0.6)] uppercase block">Confidence</span>
+                    <span className="text-lg font-black font-dot text-[#F8F4E9]">{liveFeedback.sentimentScore}%</span>
+                  </div>
+                </div>
+
+                {/* Spoken Critique Quote Block */}
+                <div className="p-4 rounded-2xl bg-[rgba(42,27,51,0.7)] border border-[rgba(246,219,192,0.25)] space-y-2 relative overflow-hidden shadow-[0_0_20px_rgba(147,80,115,0.2)]">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#F6DBC0]">
+                    <Bot className="w-3.5 h-3.5" />
+                    <span>Coach Feedback & Actionable Advice:</span>
+                  </div>
+                  <p className="text-xs text-[#F8F4E9] leading-relaxed font-medium">
+                    "{liveFeedback.critique}"
+                  </p>
+                  {liveFeedback.isFollowup && (
+                    <div className="pt-1">
+                      <span className="text-[10px] font-mono font-bold text-[#F6DBC0] bg-[rgba(147,80,115,0.3)] px-2 py-0.5 rounded-full border border-[rgba(147,80,115,0.4)]">
+                        ⚡ Follow-Up Triggered: {liveFeedback.followupReason || 'Probing deeper into technical details'}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Primary Proceed CTA inside panel */}
+                <div className="pt-2">
+                  <PrimaryButton
+                    onClick={handleProceedToNext}
+                    fullWidth
+                    size="md"
+                    icon={<ArrowRight className="w-4 h-4 text-[#F6DBC0]" />}
+                  >
+                    {isRoundFinished ? 'View Complete Final Report →' : 'Proceed to Next Question →'}
+                  </PrimaryButton>
+                </div>
+              </div>
+            ) : (
+              /* QUESTION & RESPONSE COMPOSER */
+              <>
+                <div>
+                  <div className="flex items-center justify-between pb-3 border-b border-[rgba(248,244,233,0.06)] mb-4">
+                    <div className="flex items-center gap-2">
+                      <BrainCircuit className="w-4 h-4 text-[#F6DBC0]" />
+                      <span className="text-xs font-bold uppercase tracking-wider text-[rgba(248,244,233,0.7)]">
+                        {displayedQuestion.questionType.replace('_', ' ')}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={toggleTTS}
+                      className="flex items-center gap-1 text-xs font-bold text-[#F6DBC0] hover:text-[#F8F4E9] transition-colors cursor-pointer"
+                    >
+                      {isSpeaking ? <VolumeX className="w-4 h-4 text-[#F6DBC0]" /> : <Volume2 className="w-4 h-4 text-[#F6DBC0]" />}
+                      <span>{isSpeaking ? 'Stop Audio' : 'Read Aloud'}</span>
+                    </button>
+                  </div>
+
+                  <h2 className="text-lg sm:text-xl font-bold text-[#F8F4E9] leading-snug">
+                    "{displayedQuestion.questionText}"
+                  </h2>
+
+                  {displayedQuestion.isFollowup && (
+                    <div className="mt-2.5">
+                      <Badge variant="peach" size="sm">
+                        Adaptive Follow-Up Question
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+
+                {/* Answer Mode Switcher */}
+                <div className="flex items-center justify-between pt-2 border-t border-[rgba(248,244,233,0.06)]">
+                  <span className="text-xs font-bold text-[rgba(248,244,233,0.7)] uppercase tracking-wider">
+                    Response Mode
+                  </span>
+
+                  <div className="flex items-center gap-1 bg-[rgba(26,15,34,0.7)] border border-[rgba(248,244,233,0.08)] p-1 rounded-full text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setInputMode('mic')}
+                      className={`px-3 py-1 rounded-full font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                        inputMode === 'mic'
+                          ? 'bg-[#935073] text-[#F8F4E9] shadow-sm'
+                          : 'text-[rgba(248,244,233,0.6)] hover:text-[#F8F4E9]'
+                      }`}
+                    >
+                      <Mic className="w-3.5 h-3.5" />
+                      <span>Voice</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setInputMode('text')}
+                      className={`px-3 py-1 rounded-full font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                        inputMode === 'text'
+                          ? 'bg-[#935073] text-[#F8F4E9] shadow-sm'
+                          : 'text-[rgba(248,244,233,0.6)] hover:text-[#F8F4E9]'
+                      }`}
+                    >
+                      <Keyboard className="w-3.5 h-3.5" />
+                      <span>Text</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Recorded Audio Audio Player if captured */}
+                {audioBlobUrl && !isRecording && (
+                  <div className="p-3 rounded-2xl bg-[rgba(26,15,34,0.6)] border border-[rgba(147,80,115,0.3)] space-y-2">
+                    <div className="flex items-center justify-between text-xs font-bold text-[#7FE3B9]">
+                      <span className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4" />
+                        Voice response ready for AI evaluation
+                      </span>
+                      <button
+                        onClick={() => {
+                          setAudioBlobUrl(null);
+                          setRecordedAudioBase64(null);
+                        }}
+                        className="text-[11px] text-[rgba(248,244,233,0.5)] hover:text-[#E57373] flex items-center gap-1 cursor-pointer"
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                        Re-record
+                      </button>
+                    </div>
+                    <audio controls src={audioBlobUrl} className="w-full h-8" />
+                  </div>
+                )}
+
+                {/* Text Input area (always available or in text mode) */}
+                <div className="space-y-1.5 flex-1">
+                  <label className="block text-xs font-bold text-[rgba(248,244,233,0.6)]">
+                    {inputMode === 'text' ? 'Written Solution / Code Architecture:' : 'Optional Text or Notes:'}
+                  </label>
+                  <textarea
+                    value={textAnswer}
+                    onChange={(e) => setTextAnswer(e.target.value)}
+                    placeholder="Elaborate on your approach, edge cases, trade-offs, or pseudocode..."
+                    rows={4}
+                    className="w-full bg-[rgba(26,15,34,0.7)] border border-[rgba(248,244,233,0.08)] rounded-2xl p-3.5 text-xs text-[#F8F4E9] placeholder-[rgba(248,244,233,0.35)] outline-none focus:border-[#935073] focus:shadow-[0_0_15px_rgba(147,80,115,0.3)] font-mono resize-none transition"
+                  />
+                </div>
+              </>
+            )}
           </GlassCard>
         </div>
 
         {/* FLOATING BOTTOM CONTROL PILL */}
         <div className="sticky bottom-6 z-30 flex items-center justify-center px-4">
           <div className="flex items-center gap-3 p-2 rounded-full bg-[rgba(42,27,51,0.92)] backdrop-blur-2xl border border-[rgba(248,244,233,0.15)] shadow-[0_20px_45px_rgba(15,7,20,0.9),0_0_30px_rgba(147,80,115,0.3)]">
-            {/* Primary Mic Button */}
-            <button
-              onClick={isRecording ? stopRecording : startRecording}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-extrabold text-xs sm:text-sm transition-all cursor-pointer ${
-                isRecording
-                  ? 'bg-[#E57373] text-[#1A0F22] shadow-[0_0_20px_rgba(229,115,115,0.7)] animate-pulse'
-                  : 'bg-gradient-to-r from-[#502D55] via-[#935073] to-[#F6DBC0] text-[#F8F4E9] hover:scale-103 shadow-[0_0_20px_rgba(147,80,115,0.5)]'
-              }`}
-            >
-              {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-[#F6DBC0]" />}
-              <span>{isRecording ? 'Stop Recording' : 'Record Mic (Space)'}</span>
-            </button>
+            {isInFeedbackStage ? (
+              <PrimaryButton
+                onClick={handleProceedToNext}
+                size="md"
+                icon={<ArrowRight className="w-4 h-4 text-[#F6DBC0]" />}
+              >
+                {isRoundFinished ? 'View Complete Final Report →' : 'Proceed to Next Question →'}
+              </PrimaryButton>
+            ) : (
+              <>
+                {/* Primary Mic Button */}
+                <button
+                  onClick={isRecording ? stopRecording : startRecording}
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-extrabold text-xs sm:text-sm transition-all cursor-pointer ${
+                    isRecording
+                      ? 'bg-[#E57373] text-[#1A0F22] shadow-[0_0_20px_rgba(229,115,115,0.7)] animate-pulse'
+                      : 'bg-gradient-to-r from-[#502D55] via-[#935073] to-[#F6DBC0] text-[#F8F4E9] hover:scale-103 shadow-[0_0_20px_rgba(147,80,115,0.5)]'
+                  }`}
+                >
+                  {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-[#F6DBC0]" />}
+                  <span>{isRecording ? 'Stop Recording' : 'Record Mic (Space)'}</span>
+                </button>
 
-            {/* Submit Answer CTA */}
-            <PrimaryButton
-              onClick={handleSubmitAnswer}
-              disabled={isSubmitting || (!recordedAudioBase64 && !textAnswer.trim())}
-              size="sm"
-              icon={isSubmitting ? <Sparkles className="w-4 h-4 text-[#F6DBC0] animate-spin" /> : <Send className="w-4 h-4" />}
-            >
-              {isSubmitting ? 'Evaluating...' : 'Submit & Next (Ctrl+Enter)'}
-            </PrimaryButton>
+                {/* Submit Answer CTA */}
+                <PrimaryButton
+                  onClick={handleSubmitAnswer}
+                  disabled={isSubmitting || (!recordedAudioBase64 && !textAnswer.trim())}
+                  size="sm"
+                  icon={isSubmitting ? <Sparkles className="w-4 h-4 text-[#F6DBC0] animate-spin" /> : <Send className="w-4 h-4" />}
+                >
+                  {isSubmitting ? 'Evaluating...' : 'Submit & Next (Ctrl+Enter)'}
+                </PrimaryButton>
+              </>
+            )}
           </div>
         </div>
 

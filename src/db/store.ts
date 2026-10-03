@@ -11,7 +11,7 @@ import {
   AdminAnalytics,
   TrackType,
   DifficultyType,
-} from '../types.js';
+} from '../types.ts';
 
 const DATA_DIR = process.env.NETLIFY === 'true'
   ? '/tmp/interview-ai-data'

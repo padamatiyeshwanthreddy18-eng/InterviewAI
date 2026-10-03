@@ -1,276 +1,82 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { TrackType } from '../types';
+import { Link, useLocation } from 'react-router-dom';
 import { Modal } from './ui/Modal';
-import {
-  Bot,
-  Sparkles,
-  Github,
-  Twitter,
-  Linkedin,
-  ShieldCheck,
-  Lock,
-  FileText,
-  ExternalLink,
-} from 'lucide-react';
+import { Bot, Sparkles } from 'lucide-react';
 
 export const Footer: React.FC = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const location = useLocation();
   const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'security' | null>(null);
 
-  const handleTrackClick = (track: TrackType) => {
-    if (!user) {
-      navigate(`/register?track=${encodeURIComponent(track)}`);
-    } else {
-      navigate(`/track-selection?track=${encodeURIComponent(track)}`);
-    }
-  };
+  // Hide the footer completely on live interview room so it doesn't take vertical space or distract
+  if (location.pathname.startsWith('/interview/')) {
+    return null;
+  }
 
-  const handlePlatformClick = (path: string) => {
-    if (!user && (path === '/dashboard' || path === '/profile' || path === '/history')) {
-      navigate('/login');
-    } else {
-      navigate(path);
-    }
-  };
+  const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[rgba(26,15,34,0.85)] backdrop-blur-2xl border-t border-[rgba(248,244,233,0.08)] text-[rgba(248,244,233,0.65)] py-12 px-4 sm:px-6 lg:px-8 mt-auto transition-colors relative z-10">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Brand & Description */}
-        <div className="space-y-4 md:col-span-1">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#502D55] to-[#935073] border border-[rgba(246,219,192,0.3)] flex items-center justify-center text-[#F6DBC0] shadow-[0_0_12px_rgba(147,80,115,0.4)]">
-              <Bot className="w-4 h-4 text-[#F8F4E9]" />
+    <footer
+      role="contentinfo"
+      className="w-full bg-[rgba(26,15,34,0.75)] backdrop-blur-md border-t border-[rgba(248,244,233,0.08)] mt-auto relative z-10 transition-colors"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-[56px] py-3.5 md:py-0 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-0">
+        {/* Left: Small Logo Mark + Brand + Computed Copyright Year */}
+        <div className="flex items-center gap-2.5">
+          <Link
+            to="/"
+            className="flex items-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F6DBC0] rounded-lg"
+            aria-label="Interview AI Home"
+          >
+            <div className="w-6 h-6 rounded-lg bg-gradient-to-tr from-[#502D55] to-[#935073] border border-[rgba(246,219,192,0.25)] flex items-center justify-center text-[#F6DBC0] shadow-[0_0_10px_rgba(147,80,115,0.35)] group-hover:scale-105 transition-transform">
+              <Bot className="w-3.5 h-3.5 text-[#F8F4E9]" />
             </div>
-            <span className="font-extrabold text-lg text-[#F8F4E9]">
+            <span className="font-extrabold text-sm text-[#F8F4E9] tracking-tight">
               Interview<span className="bg-gradient-to-r from-[#F6DBC0] to-[#935073] bg-clip-text text-transparent">AI</span>
             </span>
           </Link>
-          <p className="text-xs text-[rgba(248,244,233,0.55)] leading-relaxed">
-            AI-powered mock interview practice with live voice recording, answer evaluation, and personalized career growth feedback.
-          </p>
-          <div className="flex items-center gap-3 pt-2 text-[rgba(248,244,233,0.6)]">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-[rgba(42,27,51,0.6)] border border-[rgba(248,244,233,0.06)] hover:text-[#F6DBC0] hover:border-[rgba(147,80,115,0.4)] transition-all"
-              title="GitHub Repository"
-            >
-              <Github className="w-4 h-4" />
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-[rgba(42,27,51,0.6)] border border-[rgba(248,244,233,0.06)] hover:text-[#F6DBC0] hover:border-[rgba(147,80,115,0.4)] transition-all"
-              title="Twitter Feed"
-            >
-              <Twitter className="w-4 h-4" />
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-xl bg-[rgba(42,27,51,0.6)] border border-[rgba(248,244,233,0.06)] hover:text-[#F6DBC0] hover:border-[rgba(147,80,115,0.4)] transition-all"
-              title="LinkedIn Community"
-            >
-              <Linkedin className="w-4 h-4" />
-            </a>
+          <span className="text-xs text-[rgba(248,244,233,0.45)] select-none">
+            © {currentYear}
+          </span>
+        </div>
+
+        {/* Centre: Small Model Chip (hidden below 768px) */}
+        <div className="hidden md:flex items-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium text-[rgba(248,244,233,0.7)] bg-[rgba(80,45,85,0.3)] border border-[rgba(248,244,233,0.08)] shadow-sm">
+            <Sparkles className="w-3 h-3 text-[#F6DBC0]" />
+            <span>Powered by Gemini 3.7 Flash Engine</span>
           </div>
         </div>
 
-        {/* Tracks Column */}
-        <div>
-          <h4 className="text-xs font-bold text-[#F8F4E9] mb-3 uppercase tracking-wider">
-            Practice Tracks
-          </h4>
-          <ul className="space-y-2 text-xs font-medium">
-            <li>
-              <button
-                onClick={() => handleTrackClick('SDE')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Backend & Systems (SDE)</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleTrackClick('Frontend Engineer')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Frontend Engineering</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleTrackClick('Full Stack Engineer')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Full Stack Engineering</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleTrackClick('Data Scientist')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Data Science & AI</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleTrackClick('DevOps & Cloud')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>DevOps & Cloud Architect</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleTrackClick('Cybersecurity')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Cybersecurity Specialist</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleTrackClick('Product Manager')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Product Management</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handleTrackClick('HR/Behavioral')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>HR & Behavioral STAR</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        {/* Platform Column */}
-        <div>
-          <h4 className="text-xs font-bold text-[#F8F4E9] mb-3 uppercase tracking-wider">
-            Platform Features
-          </h4>
-          <ul className="space-y-2 text-xs font-medium">
-            <li>
-              <button
-                onClick={() => handlePlatformClick('/track-selection')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Live Speech Recognition</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handlePlatformClick('/dashboard')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Gemini AI Evaluation</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handlePlatformClick('/profile')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Resume Skill Matching</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handlePlatformClick('/dashboard')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Score Analytics</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => handlePlatformClick('/history')}
-                className="hover:text-[#F6DBC0] transition-colors text-left flex items-center gap-1.5 group cursor-pointer"
-              >
-                <span>Improvement Roadmaps</span>
-                <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity text-[#935073]" />
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        {/* AI Engine Column */}
-        <div>
-          <h4 className="text-xs font-bold text-[#F8F4E9] mb-3 uppercase tracking-wider">
-            AI Engine
-          </h4>
-          <div className="bg-[rgba(42,27,51,0.7)] border border-[rgba(248,244,233,0.08)] p-4 rounded-2xl space-y-2 shadow-sm">
-            <div className="flex items-center gap-2 text-xs font-extrabold text-[#F6DBC0]">
-              <Sparkles className="w-3.5 h-3.5 text-[#F6DBC0]" />
-              Gemini 3.7 Flash Engine
-            </div>
-            <p className="text-[11px] text-[rgba(248,244,233,0.6)] font-medium leading-relaxed">
-              Generates context-aware technical, situational, and follow-up questions tailored to your resume and target role.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom Bar */}
-      <div className="max-w-7xl mx-auto border-t border-[rgba(248,244,233,0.08)] mt-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[rgba(248,244,233,0.5)]">
-        <p>© {new Date().getFullYear()} InterviewAI Platform. All rights reserved.</p>
-        <div className="flex items-center gap-4 mt-3 sm:mt-0 font-bold">
+        {/* Right: Three Quiet Text Links (13px, no heavy dot separators) */}
+        <nav
+          aria-label="Legal and Security Links"
+          className="flex items-center gap-5 text-[13px] font-medium text-[rgba(248,244,233,0.65)]"
+        >
           <button
+            type="button"
             onClick={() => setActiveModal('privacy')}
-            className="hover:text-[#F6DBC0] transition-colors cursor-pointer"
+            className="hover:text-[#F6DBC0] focus:text-[#F6DBC0] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#F6DBC0] rounded transition-colors cursor-pointer"
           >
-            Privacy Policy
+            Privacy
           </button>
-          <span>·</span>
           <button
+            type="button"
             onClick={() => setActiveModal('terms')}
-            className="hover:text-[#F6DBC0] transition-colors cursor-pointer"
+            className="hover:text-[#F6DBC0] focus:text-[#F6DBC0] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#F6DBC0] rounded transition-colors cursor-pointer"
           >
-            Terms of Service
+            Terms
           </button>
-          <span>·</span>
           <button
+            type="button"
             onClick={() => setActiveModal('security')}
-            className="hover:text-[#F6DBC0] transition-colors cursor-pointer"
+            className="hover:text-[#F6DBC0] focus:text-[#F6DBC0] focus:outline-none focus-visible:ring-1 focus-visible:ring-[#F6DBC0] rounded transition-colors cursor-pointer"
           >
             Security
           </button>
-          <span>·</span>
-          <Link
-            to="/admin"
-            className="text-[#F6DBC0] hover:underline inline-flex items-center gap-1 font-extrabold"
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            Admin Portal
-          </Link>
-        </div>
+        </nav>
       </div>
 
-      {/* Interactive Information Modals */}
+      {/* Interactive Information Modals (Content 100% Preserved) */}
       <Modal
         isOpen={activeModal !== null}
         onClose={() => setActiveModal(null)}
@@ -331,6 +137,7 @@ export const Footer: React.FC = () => {
 
         <div className="pt-4">
           <button
+            type="button"
             onClick={() => setActiveModal(null)}
             className="w-full py-2.5 rounded-xl text-[#F8F4E9] font-extrabold text-xs shadow-sm transition cursor-pointer"
             style={{
