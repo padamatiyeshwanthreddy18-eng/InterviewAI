@@ -31,29 +31,41 @@
       "role": "admin",
       "passwordHash": "$2b$10$yInCEGdoL.cWGTwqWkAEluvLpravaWhGcomM2Rwtx/vnFsmB94JWu",
       "createdAt": "2026-09-12T15:47:49.078Z"
+    },
+    {
+      "id": "user-1791021071399-vcew",
+      "email": "candidate_1791021071319_q7yk@interview.ai",
+      "name": "Candidate Guest",
+      "role": "admin",
+      "passwordHash": "$2b$10$44L8GFYPvWR5PEbYaDomH.WEWQgGqA0sKRtwZg7mNRN9zB8RsI7tq",
+      "createdAt": "2026-10-03T09:51:11.399Z"
+    },
+    {
+      "id": "user-1791021137805-qc6k",
+      "email": "25r21a0553@mlrit.ac.in",
+      "name": "yesh",
+      "role": "admin",
+      "passwordHash": "$2b$10$W8xI4k/Nbnp1yZ7emX.K/u0fR7paXS9NthQRhaaS.n3qMgkYiPq8m",
+      "createdAt": "2026-10-03T09:52:17.805Z"
     }
   ],
-  "resumes": [],
-  "sessions": [
+  "resumes": [
     {
-      "id": "session-1789226653413-7wke",
-      "userId": "user-1789226625698-zpoc",
-      "track": "Product Manager",
-      "difficulty": "Beginner",
-      "companyPreset": "General Tech",
-      "status": "completed",
-      "createdAt": "2026-09-12T15:24:13.413Z",
-      "totalQuestionsCount": 3,
-      "overallScore": 5,
-      "completedAt": "2026-09-12T15:25:02.599Z",
-      "strengths": [
-        "Attempted to participate in the mock interview session"
+      "id": "resume-1791021181206",
+      "userId": "user-1791021137805-qc6k",
+      "fileName": "AI_Mock_Interview_Panel_Architecture.docx",
+      "parsedSkills": [
+        "Software Development",
+        "System Design",
+        "Git",
+        "Agile",
+        "Testing"
       ],
-      "weaknesses": [
-        "Provided incomplete or unreadable answers",
-        "Did not demonstrate sufficient domain knowledge"
-      ]
-    },
+      "parsedExperience": "Experienced developer specializing in full stack engineering and modern web technologies.",
+      "uploadedAt": "2026-10-03T09:53:01.206Z"
+    }
+  ],
+  "sessions": [
     {
       "id": "session-1789228113446-i6xh",
       "userId": "user-1789228069078-tiik",
@@ -84,6 +96,25 @@
       "createdAt": "2026-09-12T15:42:01.258Z"
     },
     {
+      "id": "session-1789226653413-7wke",
+      "userId": "user-1789226625698-zpoc",
+      "track": "Product Manager",
+      "difficulty": "Beginner",
+      "companyPreset": "General Tech",
+      "status": "completed",
+      "createdAt": "2026-09-12T15:24:13.413Z",
+      "totalQuestionsCount": 3,
+      "overallScore": 5,
+      "completedAt": "2026-09-12T15:25:02.599Z",
+      "strengths": [
+        "Attempted to participate in the mock interview session"
+      ],
+      "weaknesses": [
+        "Provided incomplete or unreadable answers",
+        "Did not demonstrate sufficient domain knowledge"
+      ]
+    },
+    {
       "id": "session-completed-demo",
       "userId": "user-1789226625698-zpoc",
       "track": "Full Stack Engineer",
@@ -102,6 +133,26 @@
       "weaknesses": [
         "Database Replication Lag: Detail strategies to mitigate replication lag when read replicas are queried immediately after high-write operations.",
         "Observability & Distributed Tracing: Incorporate OpenTelemetry metrics and distributed span IDs into the incident monitoring explanation."
+      ]
+    },
+    {
+      "id": "session-1791021207565-4977",
+      "userId": "user-1791021137805-qc6k",
+      "track": "Data Scientist",
+      "difficulty": "Beginner",
+      "companyPreset": "General Tech",
+      "status": "completed",
+      "createdAt": "2026-10-03T09:53:27.565Z",
+      "totalQuestionsCount": 3,
+      "overallScore": 35,
+      "completedAt": "2026-10-03T09:54:50.611Z",
+      "strengths": [
+        "Demonstrated problem solving logic",
+        "Maintained a structured presentation"
+      ],
+      "weaknesses": [
+        "Deepen technical detail on edge cases",
+        "Avoid brief answers on complex topics"
       ]
     }
   ],
@@ -236,6 +287,31 @@
       "sessionId": "session-completed-demo",
       "questionText": "Explain your strategy for database indexing and query optimization when API endpoint p99 response times degrade under peak load.",
       "questionType": "technical",
+      "orderIndex": 3,
+      "isFollowup": false
+    },
+    {
+      "id": "q-1791021209000-glt0",
+      "sessionId": "session-1791021207565-4977",
+      "questionText": "How do you diagnose and mitigate severe class imbalance in a fraud detection machine learning model?",
+      "questionType": "situational",
+      "orderIndex": 1,
+      "isFollowup": false
+    },
+    {
+      "id": "q-1791021240759-2vvv",
+      "sessionId": "session-1791021207565-4977",
+      "questionText": "Explain the difference between L1 and L2 regularization and how they impact model weights.",
+      "questionType": "situational",
+      "orderIndex": 2,
+      "isFollowup": true,
+      "parentQuestionId": "q-1791021209000-glt0"
+    },
+    {
+      "id": "q-1791021281960-aipk",
+      "sessionId": "session-1791021207565-4977",
+      "questionText": "How would you design an A/B testing framework to evaluate a new search recommendation algorithm?",
+      "questionType": "situational",
       "orderIndex": 3,
       "isFollowup": false
     }
@@ -390,6 +466,36 @@
       "sentimentScore": 87,
       "aiFeedback": "Great practical troubleshooting workflow. Mentioning EXPLAIN ANALYZE, partial indexes, and cache stampede jitter shows genuine production engineering experience.",
       "createdCompletedAt": "2026-09-12T15:42:01.258Z"
+    },
+    {
+      "id": "a-1791021239796-7xly",
+      "questionId": "q-1791021209000-glt0",
+      "transcriptText": "Audio recording received and transcribed.",
+      "technicalScore": 35,
+      "communicationScore": 40,
+      "sentimentScore": 50,
+      "aiFeedback": "Your answer is very brief. Try expanding on technical reasoning, key trade-offs, and concrete examples to show domain expertise.",
+      "createdCompletedAt": "2026-10-03T09:53:59.796Z"
+    },
+    {
+      "id": "a-1791021280805-d39t",
+      "questionId": "q-1791021240759-2vvv",
+      "transcriptText": "awnefawnefa'",
+      "technicalScore": 35,
+      "communicationScore": 40,
+      "sentimentScore": 50,
+      "aiFeedback": "Your answer is very brief. Try expanding on technical reasoning, key trade-offs, and concrete examples to show domain expertise.",
+      "createdCompletedAt": "2026-10-03T09:54:40.805Z"
+    },
+    {
+      "id": "a-1791021289470-hlc7",
+      "questionId": "q-1791021281960-aipk",
+      "transcriptText": "ef'f",
+      "technicalScore": 35,
+      "communicationScore": 40,
+      "sentimentScore": 50,
+      "aiFeedback": "Your answer is very brief. Try expanding on technical reasoning, key trade-offs, and concrete examples to show domain expertise.",
+      "createdCompletedAt": "2026-10-03T09:54:49.470Z"
     }
   ],
   "improvementPlans": [
@@ -459,6 +565,19 @@
         "Formulate concise 2-minute architectural walk-throughs utilizing the C4 architecture diagramming model."
       ],
       "completed": false
+    },
+    {
+      "id": "plan-1791021290613",
+      "sessionId": "session-1791021207565-4977",
+      "focusAreas": [
+        "System Scalability & Edge Cases",
+        "Structured Framework Delivery"
+      ],
+      "suggestedPractice": [
+        "Practice designing high-concurrency database schemas",
+        "Record 3-minute technical answers focusing on trade-off analysis"
+      ],
+      "completed": true
     }
   ]
 }

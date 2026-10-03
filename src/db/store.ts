@@ -13,7 +13,9 @@ import {
   DifficultyType,
 } from '../types.js';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+const DATA_DIR = process.env.NETLIFY === 'true'
+  ? '/tmp/interview-ai-data'
+  : path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
 
 interface DBData {

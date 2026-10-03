@@ -537,7 +537,7 @@ export const InterviewRoomPage: React.FC = () => {
 
   if (!session || !activeQuestion) {
     return (
-      <div className="min-h-[85vh] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 py-6 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto space-y-6 animate-pulse">
+      <div className="min-h-[85vh] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 py-6 px-4 sm:px-6 lg:px-8 max-w-5xl xl:max-w-7xl mx-auto space-y-6 animate-pulse">
         <div className="h-16 bg-slate-200 dark:bg-slate-900 rounded-2xl w-full border border-slate-300 dark:border-slate-800" />
         <div className="h-44 bg-slate-200 dark:bg-slate-900 rounded-3xl w-full border border-slate-300 dark:border-slate-800" />
         <div className="h-64 bg-slate-200 dark:bg-slate-900 rounded-3xl w-full border border-slate-300 dark:border-slate-800" />
@@ -557,7 +557,7 @@ export const InterviewRoomPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-[calc(100vh-4rem)] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 py-6 px-4 sm:px-6 lg:px-8 transition-colors">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-6xl xl:max-w-7xl mx-auto space-y-6">
       {/* Top Session Progress Bar & Controls */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

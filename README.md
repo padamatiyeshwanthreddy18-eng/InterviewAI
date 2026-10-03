@@ -110,6 +110,8 @@ This build includes fixes for the following reported issues:
 │   ├── utils/pdfGenerator.ts
 │   └── types.ts
 ├── vite.config.ts
+├── netlify.toml                # Netlify build, function, and SPA routing config
+├── netlify/functions/api.ts    # Express API adapter for Netlify Functions
 ├── render.yaml                 # Render.com deploy config
 ├── vercel.json                 # Vercel deploy config
 └── .env.example
@@ -161,7 +163,7 @@ The app serves on `http://localhost:3000` (Vite runs in middleware mode behind t
 ### Build & run in production
 
 ```bash
-npm run build   # builds the frontend and bundles server.ts to dist/server.cjs
+npm run build   # builds the frontend and bundles src/start.ts to dist/server.cjs
 npm start        # runs the bundled production server
 ```
 
@@ -178,7 +180,7 @@ npm run lint
 User accounts, resumes, interview sessions, questions, answers, and improvement plans are stored in a single JSON file at `data/db.json`, created automatically on first run. This keeps the project dependency-free for local use and small deployments, but has two implications:
 
 - **`data/` must never be committed to version control** — it contains password hashes and user data. Make sure your `.gitignore` excludes it.
-- **This store requires a persistent, writable filesystem.** It works on platforms like Render with a persistent disk, but will not retain data on stateless/serverless platforms (e.g. Vercel), since the filesystem resets between invocations. For that kind of deployment, swap in a real database (Postgres, MongoDB, etc.) before going to production.
+- **This store requires a persistent, writable filesystem.** It works on platforms like Render with a persistent disk, but will not retain data on stateless/serverless platforms (e.g. Vercel or Netlify), since the filesystem resets between invocations. The Netlify adapter uses `/tmp` so demo requests can write during a warm function instance, but accounts and sessions are not durable or shared across instances. Use a real database (Postgres, MongoDB, etc.) before going to production.
 
 ---
 
@@ -206,6 +208,9 @@ All endpoints are served under `/api`. Authenticated routes require an `Authoriz
 
 ### Vercel
 Only recommended if you first replace the file-based store with an external database — see [Data & Persistence](#data--persistence). Otherwise, sessions and accounts will not survive between requests.
+
+### Netlify
+`netlify.toml` builds the Vite frontend and routes `/api/*` requests to an Express-backed Netlify Function. Connect the repository to Netlify or deploy with the Netlify CLI. Set `JWT_SECRET` as a secret environment variable for functions; set `GEMINI_API_KEY` to enable Gemini-powered features. The default question/scoring fallbacks work without a Gemini key. The JSON store is temporary on Netlify, so this deployment is for demos only; configure persistent external storage before production use.
 
 ---
 

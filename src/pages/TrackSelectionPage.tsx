@@ -321,7 +321,7 @@ export const TrackSelectionPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-[calc(100vh-4rem)] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 py-10 px-4 sm:px-6 lg:px-8 transition-colors">
-      <div className="max-w-6xl mx-auto space-y-10">
+      <div className="max-w-6xl xl:max-w-7xl mx-auto space-y-10">
       {/* Page Header */}
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300 text-xs font-extrabold shadow-2xs">

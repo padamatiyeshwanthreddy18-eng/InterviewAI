@@ -164,7 +164,7 @@ export const ResultsPage: React.FC = () => {
 
   return (
     <div className="w-full min-h-[calc(100vh-4rem)] bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 py-8 px-4 sm:px-6 lg:px-8 transition-colors">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-6xl xl:max-w-7xl mx-auto space-y-8">
       {/* Top Banner */}
       <div className="bg-slate-900 text-white dark:bg-gradient-to-r dark:from-indigo-950 dark:via-purple-950 dark:to-slate-900 border border-slate-800 dark:border-indigo-500/30 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
         <div className="space-y-2 text-center md:text-left">

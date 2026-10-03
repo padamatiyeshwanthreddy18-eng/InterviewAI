@@ -1,11 +1,9 @@
 import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
-import path from 'path';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import { createServer as createViteServer } from 'vite';
 
 import { store } from './src/db/store.js';
 import {
@@ -28,7 +26,6 @@ if (!process.env.JWT_SECRET && process.env.NODE_ENV === 'production') {
 }
 
 const JWT_SECRET = process.env.JWT_SECRET || 'interview-ai-secret-key-2026';
-const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const OWNER_ADMIN_EMAIL = 'sachigogulwar525@gmail.com';
 
 // Simple RFC-5322-ish email check — good enough to reject obviously malformed
@@ -52,7 +49,7 @@ function validatePassword(password: unknown): string | null {
   return null;
 }
 
-const app = express();
+export const app = express();
 
 // Security Headers via Helmet (protection against XSS, clickjacking, MIME sniffing)
 app.use(
@@ -954,31 +951,3 @@ app.post('/api/notifications/test-email', authenticateToken, async (req: AuthReq
     res.status(500).json({ error: 'Failed to send test email' });
   }
 });
-
-// ==========================================
-// VITE & PROD MIDDLEWARE
-// ==========================================
-async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  }
-
-  const HOST = process.env.HOST || '0.0.0.0';
-  app.listen(PORT, HOST, () => {
-    console.log(`\n  🚀 InterviewAI is running! Access it in your browser at:\n`);
-    console.log(`  👉 Localhost:  http://localhost:${PORT}`);
-    console.log(`  👉 Network IP: http://127.0.0.1:${PORT}\n`);
-  });
-}
-
-startServer();
